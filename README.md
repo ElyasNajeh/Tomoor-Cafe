@@ -1,0 +1,192 @@
+# ☕ Tomoor Cafe
+
+A full-stack coffee shop management system built with FastAPI, React, PostgreSQL, and Docker.
+
+The project follows a Feature-Based Architecture in the backend and is fully containerized using Docker, making setup and development simple and consistent across different environments.
+
+---
+# ✨ Features
+
+- Admin Authentication
+- Dashboard
+- Categories Management
+- Products Management
+- Product Images
+- Sliders Management
+- JWT Authentication
+- Dockerized Development Environment
+
+---
+
+# 🚀 Tech Stack
+
+## Backend
+- FastAPI
+- SQLAlchemy
+- PostgreSQL
+- JWT Authentication
+- Pydantic
+
+## Frontend
+- React
+- TypeScript
+- Vite
+
+## Database
+- PostgreSQL
+
+## DevOps
+- Docker
+- Docker Compose
+
+---
+
+# 📁 Project Structure
+
+```text
+Tomoor-Cafe/
+│
+├── .env
+├── .env.example
+├── docker-compose.yml
+├── README.md
+│
+├── Tomoor-CafeAPI/ # FastAPI Backend
+│
+└── Tomoor-CafeUI/ # React Frontend
+```
+
+---
+
+# 📋 Prerequisites
+
+Before running the project, make sure you have installed:
+
+- Docker Desktop
+- Git
+
+---
+
+# ⚙️ Installation
+
+Clone the repository:
+
+```bash
+git clone <repository-url>
+```
+
+Go to the project directory:
+
+```bash
+cd Tomoor-Cafe
+```
+
+Create your environment file:
+
+Windows:
+
+```powershell
+copy .env.example .env
+```
+
+Update the `SECRET_KEY` value inside `.env` before running the project.
+
+---
+
+# ▶️ Running the Project
+
+Build and start all services:
+
+```bash
+docker compose up --build
+```
+
+For the next runs:
+
+```bash
+docker compose up
+```
+
+Stop all services:
+
+```bash
+docker compose down
+```
+
+---
+
+# 🌐 Services
+
+| Service | URL |
+|----------|-----|
+| React | http://localhost:5173 |
+| FastAPI | http://localhost:8000 |
+| Swagger | http://localhost:8000/docs |
+| PostgreSQL | localhost:5432 |
+
+---
+
+# 🐳 Docker Services
+
+The project contains three containers:
+
+- PostgreSQL
+- FastAPI
+- React
+
+Docker automatically:
+
+- Creates the PostgreSQL container.
+- Creates the project database.
+- Starts the API.
+- Starts the React development server.
+
+FastAPI automatically creates the database tables on startup.
+
+---
+
+# 📚 API Documentation
+
+Swagger UI:
+
+```
+http://localhost:8000/docs
+```
+
+---
+
+# 🛠 Useful Commands
+
+Rebuild images:
+
+```bash
+docker compose up --build
+```
+
+Stop containers:
+
+```bash
+docker compose down
+```
+
+View logs:
+
+```bash
+docker compose logs
+```
+
+View running containers:
+
+```bash
+docker ps
+```
+
+---
+
+# 📌 Notes
+
+- Environment variables are stored in the project root.
+- `.env.example` contains the required configuration template.
+- `.env` should never be committed to Git.
+- The backend follows a Feature-Based Architecture.
+- Docker volumes are used for live development.
