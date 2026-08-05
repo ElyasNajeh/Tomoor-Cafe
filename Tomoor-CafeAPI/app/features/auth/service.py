@@ -16,18 +16,18 @@ def login(db: Session, login_data: LoginRequest, response: Response):
     if not is_correct:
         raise HTTPException(status_code=401, detail="Invalid email or password")
     access_token = create_token(
-        {"sub": found_user.email},
+        found_user.id,
+        "access",
         timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
     )
-    refresh_token = create_token(
-        {"sub": found_user.email}, timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
-    )
+    refresh_token = create_token(found_user.id, "refresh", timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS))
     response.set_cookie(
         key="access_token",
         value=access_token,
         httponly=True,
-        secure=False,
-        samesite="strict",
+        secure=settings.COOKIE_SECURE,
+        samesite=settings.COOKIE_SAMESITE,
+        path="/",
         max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
     )
 
@@ -35,43 +35,43 @@ def login(db: Session, login_data: LoginRequest, response: Response):
         key="refresh_token",
         value=refresh_token,
         httponly=True,
-        secure=False,
-        samesite="strict",
+        secure=settings.COOKIE_SECURE,
+        samesite=settings.COOKIE_SAMESITE,
+        path="/",
         max_age=settings.REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60,
     )
-    return {
-        "access_token": access_token,
-        "refresh_token": refresh_token,
-        "token_type": "bearer",
-        "username": found_user.username,
-    }
+    return {"message": "Logged in successfully"}
 
 
-def refresh_access_token(request: Request, response: Response):
+def refresh_access_token(db: Session, request: Request, response: Response):
     refresh_token = request.cookies.get("refresh_token")
     if refresh_token is None:
         raise HTTPException(status_code=401, detail="Refresh token missing")
-    email = verify_token(refresh_token)
-    if email is None:
+    admin_id = verify_token(refresh_token, "refresh")
+    if admin_id is None:
         raise HTTPException(status_code=401, detail="Invalid refresh token")
+    if db.query(Admin).filter(Admin.id == admin_id).first() is None:
+        raise HTTPException(status_code=401, detail="Admin no longer exists")
     new_access_token = create_token(
-        {"sub": email},
+        admin_id,
+        "access",
         timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
     )
     response.set_cookie(
         key="access_token",
         value=new_access_token,
         httponly=True,
-        secure=False,
-        samesite="strict",
+        secure=settings.COOKIE_SECURE,
+        samesite=settings.COOKIE_SAMESITE,
+        path="/",
         max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
     )
-    return {"access_token": new_access_token, "token_type": "bearer"}
+    return {"message": "Access refreshed"}
 
 
 def logout(response: Response):
-    response.delete_cookie(key="access_token", samesite="strict", secure=False)
+    response.delete_cookie(key="access_token", path="/", samesite=settings.COOKIE_SAMESITE, secure=settings.COOKIE_SECURE)
 
-    response.delete_cookie(key="refresh_token", samesite="strict", secure=False)
+    response.delete_cookie(key="refresh_token", path="/", samesite=settings.COOKIE_SAMESITE, secure=settings.COOKIE_SECURE)
 
     return {"message": "Logged out successfully"}

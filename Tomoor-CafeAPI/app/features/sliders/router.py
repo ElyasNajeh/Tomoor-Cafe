@@ -10,6 +10,14 @@ from app.features.sliders.schema import SliderCreate
 router = APIRouter(prefix="/sliders", tags=["Sliders"])
 
 
+@router.post("/upload-image")
+def upload_image(
+    file: UploadFile = File(...),
+    current_user=Depends(get_current_user),
+):
+    return service.upload_image(file)
+
+
 @router.post("/")
 def create_slider(
     slider_data: SliderCreate,
@@ -22,7 +30,6 @@ def create_slider(
 @router.get("/")
 def get_sliders(
     db: Session = Depends(get_db),
-    current_user: str = Depends(get_current_user),
 ):
     return service.get_sliders(db)
 
@@ -65,9 +72,3 @@ def toggle_slider_status(
     return service.toggle_slider_status(db, slider_id)
 
 
-@router.post("/upload-image")
-def upload_image(
-    file: UploadFile = File(...),
-    current_user: str = Depends(get_current_user),
-):
-    return service.upload_image(file)

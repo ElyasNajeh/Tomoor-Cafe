@@ -1,13 +1,11 @@
-from fastapi import HTTPException, UploadFile, File
+from fastapi import HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
-from pathlib import Path
-import shutil
-from uuid import uuid4
 
 from app.shared import crud
 from app.features.sliders.model import Slider
 from app.features.sliders.schema import SliderCreate
+from app.shared.images import save_image
 
 
 def create_slider(db: Session, slider_data: SliderCreate):
@@ -107,21 +105,4 @@ def toggle_slider_status(db: Session, slider_id: int):
 
 
 def upload_image(file: UploadFile):
-
-    upload_dir = Path(
-        "../../../../WorkProjects/TurmusayyaSweet/TurmusayyaSweetUI/website/uploads/slider"
-    )
-
-    upload_dir.mkdir(parents=True, exist_ok=True)
-
-    extension = Path(file.filename).suffix
-
-    filename = f"{uuid4()}{extension}"
-
-    file_path = upload_dir / filename
-
-    with open(file_path, "wb") as buffer:
-
-        shutil.copyfileobj(file.file, buffer)
-
-    return {"filename": filename}
+    return save_image(file, "sliders")

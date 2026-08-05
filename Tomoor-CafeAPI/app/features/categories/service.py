@@ -1,9 +1,14 @@
-from fastapi import HTTPException
+from fastapi import HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
 from app.shared import crud
 from app.features.categories.model import Category
 from app.features.categories.schema import CategoryCreate
+from app.shared.images import save_image
+
+
+def upload_image(file: UploadFile):
+    return save_image(file, "categories")
 
 
 def create_category(db: Session, category_data: CategoryCreate):

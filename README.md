@@ -91,6 +91,8 @@ copy .env.example .env
 
 Update the `SECRET_KEY` value inside `.env` before running the project.
 
+For local frontend development outside Docker, copy `Tomoor-CafeUI/.env.example` to `Tomoor-CafeUI/.env.local`. The default API URL is `http://localhost:8000`.
+
 ---
 
 # ▶️ Running the Project
@@ -142,6 +144,16 @@ Docker automatically:
 - Starts the React development server.
 
 FastAPI automatically creates the database tables on startup.
+
+## Create the first admin
+
+After the services are running, bootstrap the first admin interactively (the password is prompted and is not stored in shell history):
+
+```bash
+docker compose exec api python -m app.bootstrap_admin --username admin --email you@example.com
+```
+
+This command only works while the database has no admins. Further admins must be created by an authenticated admin through the protected admin API.
 
 ---
 

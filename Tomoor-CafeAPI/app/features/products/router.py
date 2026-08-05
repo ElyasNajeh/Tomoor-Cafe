@@ -9,6 +9,14 @@ from app.features.products.schema import ProductCreate, ProductImageCreate
 router = APIRouter(prefix="/products", tags=["Products"])
 
 
+@router.post("/upload-image")
+def upload_image(
+    file: UploadFile = File(...),
+    current_user=Depends(get_current_user),
+):
+    return service.upload_image(file)
+
+
 @router.post("/")
 def create_product(
     product_data: ProductCreate,
@@ -26,7 +34,6 @@ def get_products(db: Session = Depends(get_db)):
 @router.get("/images")
 def get_products_images(
     db: Session = Depends(get_db),
-    current_user: str = Depends(get_current_user),
 ):
     return service.get_products_images(db)
 
@@ -117,9 +124,3 @@ def toggle_product_image(
     return service.toggle_product_image(db, product_image_id)
 
 
-@router.post("/upload-image")
-def upload_image(
-    file: UploadFile = File(...),
-    current_user: str = Depends(get_current_user),
-):
-    return service.upload_image(file)

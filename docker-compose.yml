@@ -37,6 +37,9 @@ services:
     depends_on:
       - postgres
 
+    volumes:
+      - uploads_data:/app/uploads
+
   ui:
     build:
       context: ./Tomoor-CafeUI
@@ -44,6 +47,9 @@ services:
     container_name: tomoor-ui
 
     restart: unless-stopped
+
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
 
     ports:
       - "5173:5173"
@@ -53,3 +59,4 @@ services:
 
 volumes:
   postgres_data:
+  uploads_data:

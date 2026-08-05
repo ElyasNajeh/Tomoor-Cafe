@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, File, UploadFile
 from sqlalchemy.orm import Session
 
 from app.core.security import get_current_user
@@ -7,6 +7,14 @@ from app.features.categories import service
 from app.features.categories.schema import CategoryCreate
 
 router = APIRouter(prefix="/categories", tags=["Categories"])
+
+
+@router.post("/upload-image")
+def upload_image(
+    file: UploadFile = File(...),
+    current_user=Depends(get_current_user),
+):
+    return service.upload_image(file)
 
 
 @router.post("/")
