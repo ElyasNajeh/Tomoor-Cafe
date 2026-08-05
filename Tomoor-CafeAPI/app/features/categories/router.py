@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, File, UploadFile
+from fastapi import APIRouter, Depends, File, UploadFile, Query
 from sqlalchemy.orm import Session
 
 from app.core.security import get_current_user
@@ -27,8 +27,11 @@ def create_category(
 
 
 @router.get("/")
-def get_categories(db: Session = Depends(get_db)):
-    return service.get_categories(db)
+def get_categories(
+    page: int = Query(1, ge=1), limit: int = Query(12, ge=1, le=100),
+    search: str | None = Query(None, max_length=255), db: Session = Depends(get_db),
+):
+    return service.get_categories(db, page, limit, search)
 
 
 @router.get("/{category_id}")

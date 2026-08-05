@@ -8,21 +8,16 @@ from app.shared import crud
 
 
 def create_admin(db: Session, admin_data: AdminCreate):
-    existing_username = (
-        db.query(Admin).filter(Admin.username == admin_data.username).first()
+    email = str(admin_data.email).lower()
+    existing_email = (
+        db.query(Admin).filter(Admin.email == email).first()
     )
-
-    if existing_username:
-        raise HTTPException(status_code=400, detail="Username already exists")
-
-    existing_email = db.query(Admin).filter(Admin.email == admin_data.email).first()
 
     if existing_email:
         raise HTTPException(status_code=400, detail="Email already exists")
 
     admin = Admin(
-        username=admin_data.username,
-        email=admin_data.email,
+        email=email,
         hashed_password=security.hash_password(admin_data.password),
     )
 
@@ -48,22 +43,11 @@ def update_admin(db: Session, admin_id: int, admin_data: AdminCreate):
     if not admin:
         raise HTTPException(status_code=404, detail="Admin not found")
 
-    existing_username = (
-        db.query(Admin)
-        .filter(
-            Admin.username == admin_data.username,
-            Admin.id != admin_id,
-        )
-        .first()
-    )
-
-    if existing_username:
-        raise HTTPException(status_code=400, detail="Username already exists")
-
+    email = str(admin_data.email).lower()
     existing_email = (
         db.query(Admin)
         .filter(
-            Admin.email == admin_data.email,
+            Admin.email == email,
             Admin.id != admin_id,
         )
         .first()
@@ -73,6 +57,7 @@ def update_admin(db: Session, admin_id: int, admin_data: AdminCreate):
         raise HTTPException(status_code=400, detail="Email already exists")
 
     data = admin_data.model_dump()
+    data["email"] = email
     data["hashed_password"] = security.hash_password(data.pop("password"))
 
     return crud.update_by_id(db, Admin, admin_id, data)

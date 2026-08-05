@@ -24,20 +24,26 @@ def create_product(db: Session, product_data: ProductCreate):
     )
     if not exist_category:
         raise HTTPException(status_code=400, detail="Category not found")
-    product = Product(
-        category_id=product_data.category_id,
-        name_ar=product_data.name_ar,
-        name_en=product_data.name_en,
-        description_ar=product_data.description_ar,
-        description_en=product_data.description_en,
-        price=product_data.price,
-        image=product_data.image,
-    )
+    product = Product(**product_data.model_dump())
     return crud.create(db, product)
 
 
-def get_products(db: Session):
-    return crud.get_all(db, Product)
+def get_products(
+    db: Session, page: int, limit: int, search: str | None,
+    category_id: int | None, is_active: bool | None,
+):
+    query = db.query(Product)
+    if search:
+        term = f"%{search.strip()}%"
+        query = query.filter((Product.name_ar.ilike(term)) | (Product.name_en.ilike(term)))
+    if category_id is not None:
+        query = query.filter(Product.category_id == category_id)
+    if is_active is not None:
+        query = query.filter(Product.is_active == is_active)
+    total = query.count()
+    items = query.order_by(Product.created_at.desc()).offset((page - 1) * limit).limit(limit).all()
+    return {"items": items, "page": page, "limit": limit, "total_items": total,
+            "total_pages": max(1, (total + limit - 1) // limit)}
 
 
 def get_product(db: Session, product_id: int):

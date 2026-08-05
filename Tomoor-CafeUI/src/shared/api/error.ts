@@ -38,6 +38,14 @@ export function getApiErrorMessage(
     return data.detail
   }
 
+  if ("detail" in data && Array.isArray(data.detail)) {
+    const messages = data.detail.flatMap((item) => {
+      if (typeof item !== "object" || item === null || !("msg" in item) || typeof item.msg !== "string") return []
+      return [item.msg.replace(/^Value error,\s*/i, "")]
+    })
+    if (messages.length) return messages.join(" ")
+  }
+
   if (
     "message" in data &&
     typeof data.message === "string"

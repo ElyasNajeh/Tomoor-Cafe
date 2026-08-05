@@ -1,6 +1,5 @@
 export type AdminUser = {
   id: number
-  username: string
   email: string
 }
 

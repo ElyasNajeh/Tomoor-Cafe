@@ -150,7 +150,7 @@ FastAPI automatically creates the database tables on startup.
 After the services are running, bootstrap the first admin interactively (the password is prompted and is not stored in shell history):
 
 ```bash
-docker compose exec api python -m app.bootstrap_admin --username admin --email you@example.com
+docker compose exec api python -m app.bootstrap_admin
 ```
 
 This command only works while the database has no admins. Further admins must be created by an authenticated admin through the protected admin API.

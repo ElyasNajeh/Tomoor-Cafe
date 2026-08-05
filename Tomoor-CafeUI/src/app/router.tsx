@@ -10,11 +10,15 @@ import { LoginPage } from "@/features/auth/LoginPage"
 
 import { AdminLayout } from "@/layouts/AdminLayout"
 import { DashboardPage } from "@/features/admin/DashboardPage"
+import { CategoriesPage } from "@/features/categories/CategoriesPage"
+import { ProductsPage } from "@/features/products/ProductsPage"
+import { AdminsPage } from "@/features/admins/AdminsPage"
+import { SettingsPage } from "@/features/settings/SettingsPage"
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <main className="public-placeholder"><h1>Tomoor Cafe</h1><p>Our public cafe experience is coming soon.</p></main>,
+    element: <main className="public-placeholder"><h1>ETA Company</h1><p>Our public experience is coming soon.</p></main>,
   },
   {
     path: "/login",
@@ -37,6 +41,10 @@ export const router = createBrowserRouter([
         index: true,
         element: <DashboardPage />,
       },
+      { path: "categories", element: <CategoriesPage /> },
+      { path: "products", element: <ProductsPage /> },
+      { path: "admins", element: <AdminsPage /> },
+      { path: "settings", element: <SettingsPage /> },
     ],
   },
 ])

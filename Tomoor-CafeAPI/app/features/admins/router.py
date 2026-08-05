@@ -5,6 +5,7 @@ from app.db.session import get_db
 from app.core.security import get_current_user
 from app.features.admins import service
 from app.features.admins.schema import AdminCreate, AdminPublic
+from app.features.admins.model import Admin
 
 router = APIRouter(prefix="/admins", tags=["Admins"])
 
@@ -49,6 +50,9 @@ def update_admin(
 def delete_admin(
     admin_id: int,
     db: Session = Depends(get_db),
-    current_user: str = Depends(get_current_user),
+    current_user: Admin = Depends(get_current_user),
 ):
+    if current_user.id == admin_id:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=400, detail="You cannot delete your own admin account")
     return service.delete_admin(db, admin_id)

@@ -9,7 +9,7 @@ from app.core.config import settings
 
 
 def login(db: Session, login_data: LoginRequest, response: Response):
-    found_user = db.query(Admin).filter(Admin.email == login_data.email).first()
+    found_user = db.query(Admin).filter(Admin.email == str(login_data.email).lower()).first()
     if not found_user:
         raise HTTPException(status_code=401, detail="Invalid email or password")
     is_correct = verify_password(login_data.password, found_user.hashed_password)

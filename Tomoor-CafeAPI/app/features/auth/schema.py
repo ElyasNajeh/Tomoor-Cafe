@@ -1,6 +1,8 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, Field
+
+EMAIL_PATTERN = r"^[^@\s]+@[^@\s]+\.[^@\s]+$"
 
 
 class LoginRequest(BaseModel):
-    email: EmailStr
+    email: str = Field(max_length=255, pattern=EMAIL_PATTERN)
     password: str

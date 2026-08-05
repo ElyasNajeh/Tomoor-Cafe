@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, UploadFile, File
+from fastapi import APIRouter, Depends, UploadFile, File, Query
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
@@ -27,8 +27,12 @@ def create_product(
 
 
 @router.get("/")
-def get_products(db: Session = Depends(get_db)):
-    return service.get_products(db)
+def get_products(
+    page: int = Query(1, ge=1), limit: int = Query(10, ge=1, le=100),
+    search: str | None = Query(None, max_length=255), category_id: int | None = Query(None, ge=1),
+    is_active: bool | None = None, db: Session = Depends(get_db),
+):
+    return service.get_products(db, page, limit, search, category_id, is_active)
 
 
 @router.get("/images")
