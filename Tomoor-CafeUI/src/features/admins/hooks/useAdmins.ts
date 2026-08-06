@@ -1,37 +1,36 @@
-import { useCallback, useEffect, useState } from "react"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useFeedback } from "@/shared/feedback/FeedbackProvider"
+import { queryKeys } from "@/shared/query/queryClient"
 import { AdminsApi } from "../admins.api"
 import type { Admin, AdminPayload } from "../admins.types"
 
 export function useAdmins(currentAdminId: number | undefined) {
   const { toast, confirm } = useFeedback()
-  const [items, setItems] = useState<Admin[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState("")
+  const queryClient = useQueryClient()
 
-  const loadAdmins = useCallback(async () => {
-    setLoading(true)
-    setError("")
+  const adminsQuery = useQuery({
+    queryKey: queryKeys.admins,
+    queryFn: AdminsApi.list,
+  })
 
-    try {
-      setItems(await AdminsApi.list())
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Unable to load admins")
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+  const createMutation = useMutation({
+    mutationFn: AdminsApi.create,
+    onSuccess: async (_, payload) => {
+      toast.success("Admin added", `${payload.email} can now sign in.`)
+      await queryClient.invalidateQueries({ queryKey: queryKeys.admins })
+    },
+  })
 
-  useEffect(() => {
-    // Synchronize this protected route with the server-side admin list.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    void loadAdmins()
-  }, [loadAdmins])
+  const deleteMutation = useMutation({
+    mutationFn: (admin: Admin) => AdminsApi.delete(admin.id),
+    onSuccess: async (_, admin) => {
+      toast.success("Admin deleted", `${admin.email} no longer has access.`)
+      await queryClient.invalidateQueries({ queryKey: queryKeys.admins })
+    },
+  })
 
   async function createAdmin(payload: AdminPayload) {
-    await AdminsApi.create(payload)
-    toast.success("Admin added", `${payload.email} can now sign in.`)
-    await loadAdmins()
+    await createMutation.mutateAsync(payload)
   }
 
   async function deleteAdmin(admin: Admin) {
@@ -51,19 +50,23 @@ export function useAdmins(currentAdminId: number | undefined) {
     }
 
     try {
-      await AdminsApi.delete(admin.id)
-      toast.success("Admin deleted", `${admin.email} no longer has access.`)
-      await loadAdmins()
+      await deleteMutation.mutateAsync(admin)
     } catch (caught) {
       toast.error("Could not delete admin", caught instanceof Error ? caught.message : undefined)
     }
   }
 
+  const error = adminsQuery.error instanceof Error
+    ? adminsQuery.error.message
+    : adminsQuery.error
+      ? "Unable to load admins"
+      : ""
+
   return {
-    items,
-    loading,
+    items: adminsQuery.data ?? [],
+    loading: adminsQuery.isPending,
     error,
-    reload: loadAdmins,
+    reload: adminsQuery.refetch,
     createAdmin,
     deleteAdmin,
   }

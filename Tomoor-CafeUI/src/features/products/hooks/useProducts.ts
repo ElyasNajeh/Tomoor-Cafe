@@ -1,75 +1,106 @@
-import { useCallback, useEffect, useState } from "react"
+import { useState } from "react"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { CategoriesApi } from "@/features/categories/categories.api"
-import type { Category } from "@/features/categories/categories.types"
 import { useFeedback } from "@/shared/feedback/FeedbackProvider"
+import { queryKeys } from "@/shared/query/queryClient"
 import { ProductsApi } from "../products.api"
 import type { Product, ProductPayload } from "../products.types"
 
 const PAGE_SIZE = 10
+const CATEGORY_LIMIT = 100
 
 export function useProducts() {
   const { toast, confirm } = useFeedback()
-  const [items, setItems] = useState<Product[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState("")
+  const queryClient = useQueryClient()
   const [search, setSearchValue] = useState("")
   const [categoryFilter, setCategoryFilterValue] = useState("")
   const [statusFilter, setStatusFilterValue] = useState("")
   const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [totalItems, setTotalItems] = useState(0)
 
-  const loadProducts = useCallback(async () => {
-    setLoading(true)
-    setError("")
+  const productParams = {
+    page,
+    limit: PAGE_SIZE,
+    search,
+    category_id: categoryFilter ? Number(categoryFilter) : undefined,
+    is_active: statusFilter ? statusFilter === "true" : undefined,
+  }
 
-    try {
-      const [productsResult, categoriesResult] = await Promise.all([
-        ProductsApi.list({
-          page,
-          limit: PAGE_SIZE,
-          search,
-          category_id: categoryFilter ? Number(categoryFilter) : undefined,
-          is_active: statusFilter ? statusFilter === "true" : undefined,
-        }),
-        CategoriesApi.list({ limit: 100 }),
+  const productsQuery = useQuery({
+    queryKey: [...queryKeys.products, productParams],
+    queryFn: () => ProductsApi.list(productParams),
+  })
+
+  const categoriesQuery = useQuery({
+    queryKey: [...queryKeys.categories, { limit: CATEGORY_LIMIT }],
+    queryFn: () => CategoriesApi.list({ limit: CATEGORY_LIMIT }),
+  })
+
+  const saveMutation = useMutation({
+    mutationFn: async ({
+      product,
+      payload,
+    }: {
+      product: Product | null
+      payload: ProductPayload
+    }) => product
+      ? ProductsApi.update(product.id, payload)
+      : ProductsApi.create(payload),
+    onSuccess: async (_, { product, payload }) => {
+      toast.success(
+        product ? "Product updated" : "Product created",
+        `${payload.name_en} was saved successfully.`,
+      )
+
+      const invalidations = [
+        queryClient.invalidateQueries({ queryKey: queryKeys.products }),
+      ]
+
+      if (!product) {
+        invalidations.push(
+          queryClient.invalidateQueries({ queryKey: queryKeys.dashboardStats }),
+        )
+      }
+
+      await Promise.all(invalidations)
+    },
+  })
+
+  const deleteMutation = useMutation({
+    mutationFn: (product: Product) => ProductsApi.delete(product.id),
+    onSuccess: async (_, product) => {
+      toast.success("Product deleted", `${product.name_en} was removed.`)
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.products }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.dashboardStats }),
       ])
+    },
+  })
 
-      setItems(productsResult.items)
-      setTotalPages(productsResult.total_pages)
-      setTotalItems(productsResult.total_items)
-      setCategories(categoriesResult.items)
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Unable to load products")
-    } finally {
-      setLoading(false)
-    }
-  }, [categoryFilter, page, search, statusFilter])
-
-  useEffect(() => {
-    // Synchronize the current query with the server.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    void loadProducts()
-  }, [loadProducts])
+  const toggleMutation = useMutation({
+    mutationFn: (product: Product) => ProductsApi.toggle(product.id),
+    onSuccess: async (_, product) => {
+      toast.success(
+        product.is_active ? "Product hidden" : "Product activated",
+        `${product.name_en} is now ${product.is_active ? "hidden from" : "visible on"} the menu.`,
+      )
+      await queryClient.invalidateQueries({ queryKey: queryKeys.products })
+    },
+  })
 
   function updateFilter(setter: (value: string) => void, value: string) {
     setter(value)
     setPage(1)
   }
 
-  async function saveProduct(product: Product | null, payload: ProductPayload) {
-    if (product) {
-      await ProductsApi.update(product.id, payload)
-    } else {
-      await ProductsApi.create(payload)
-    }
+  async function reload() {
+    await Promise.all([
+      productsQuery.refetch(),
+      categoriesQuery.refetch(),
+    ])
+  }
 
-    toast.success(
-      product ? "Product updated" : "Product created",
-      `${payload.name_en} was saved successfully.`,
-    )
-    await loadProducts()
+  async function saveProduct(product: Product | null, payload: ProductPayload) {
+    await saveMutation.mutateAsync({ product, payload })
   }
 
   async function deleteProduct(product: Product) {
@@ -85,9 +116,7 @@ export function useProducts() {
     }
 
     try {
-      await ProductsApi.delete(product.id)
-      toast.success("Product deleted", `${product.name_en} was removed.`)
-      await loadProducts()
+      await deleteMutation.mutateAsync(product)
     } catch (caught) {
       toast.error("Could not delete product", caught instanceof Error ? caught.message : undefined)
     }
@@ -95,33 +124,35 @@ export function useProducts() {
 
   async function toggleProduct(product: Product) {
     try {
-      await ProductsApi.toggle(product.id)
-      toast.success(
-        product.is_active ? "Product hidden" : "Product activated",
-        `${product.name_en} is now ${product.is_active ? "hidden from" : "visible on"} the menu.`,
-      )
-      await loadProducts()
+      await toggleMutation.mutateAsync(product)
     } catch (caught) {
       toast.error("Status update failed", caught instanceof Error ? caught.message : undefined)
     }
   }
 
+  const errorValue = productsQuery.error ?? categoriesQuery.error
+  const error = errorValue instanceof Error
+    ? errorValue.message
+    : errorValue
+      ? "Unable to load products"
+      : ""
+
   return {
-    items,
-    categories,
-    loading,
+    items: productsQuery.data?.items ?? [],
+    categories: categoriesQuery.data?.items ?? [],
+    loading: productsQuery.isPending || categoriesQuery.isPending,
     error,
     search,
     categoryFilter,
     statusFilter,
     page,
-    totalPages,
-    totalItems,
+    totalPages: productsQuery.data?.total_pages ?? 1,
+    totalItems: productsQuery.data?.total_items ?? 0,
     setSearch: (value: string) => updateFilter(setSearchValue, value),
     setCategoryFilter: (value: string) => updateFilter(setCategoryFilterValue, value),
     setStatusFilter: (value: string) => updateFilter(setStatusFilterValue, value),
     setPage,
-    reload: loadProducts,
+    reload,
     saveProduct,
     deleteProduct,
     toggleProduct,

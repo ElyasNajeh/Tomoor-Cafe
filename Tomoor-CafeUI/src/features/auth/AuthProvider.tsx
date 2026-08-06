@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react"
+import { useQueryClient } from "@tanstack/react-query"
 
 import {
   AuthApi,
@@ -19,6 +20,7 @@ import type {
 
 
 import { useRequest } from "@/shared/request/RequestProvider"
+import { queryPersister } from "@/shared/query/queryClient"
 
 type AuthContextValue = {
   user: AdminUser | null
@@ -41,13 +43,12 @@ type AuthProviderProps = {
 export function AuthProvider({
   children,
 }: AuthProviderProps) {
-  const [user, setUser] =
-    useState<AdminUser | null>(null)
+  const [user, setUser] = useState<AdminUser | null>(null)
 
-  const [isAuthReady, setIsAuthReady] =
-    useState(false)
+  const [isAuthReady, setIsAuthReady] = useState(false)
 
   const { runRequest } = useRequest()
+  const queryClient = useQueryClient()
 
   const isAuthenticated = user !== null
 
@@ -88,9 +89,15 @@ export function AuthProvider({
     try {
       await runRequest(() => AuthApi.logout())
     } finally {
-      setUser(null)
+      queryClient.clear()
+
+      try {
+        await queryPersister.removeClient()
+      } finally {
+        setUser(null)
+      }
     }
-  }, [runRequest])
+  }, [queryClient, runRequest])
 
   const value = useMemo(
     () => ({

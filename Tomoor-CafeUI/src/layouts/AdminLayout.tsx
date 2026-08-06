@@ -1,16 +1,52 @@
 import { useState } from "react"
-import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom"
+import {
+  Link,
+  NavLink,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from "react-router-dom"
 import { useAuth } from "@/features/auth/AuthProvider"
 import { Icon, type IconName } from "@/shared/components/Icon"
 import logo from "@/assets/logo.png"
 
-const links: { to: string; label: string; icon: IconName; end?: boolean }[] = [
-  { to: "/admin", label: "Dashboard", icon: "dashboard", end: true },
-  { to: "/admin/categories", label: "Categories", icon: "categories" },
-  { to: "/admin/products", label: "Products", icon: "products" },
-  { to: "/admin/sliders", label: "Sliders", icon: "sliders" },
-  { to: "/admin/admins", label: "Admins", icon: "admins" },
-  { to: "/admin/settings", label: "Settings", icon: "settings" },
+const links: {
+  to: string
+  label: string
+  icon: IconName
+  end?: boolean
+}[] = [
+  {
+    to: "/admin",
+    label: "Dashboard",
+    icon: "dashboard",
+    end: true,
+  },
+  {
+    to: "/admin/categories",
+    label: "Categories",
+    icon: "categories",
+  },
+  {
+    to: "/admin/products",
+    label: "Products",
+    icon: "products",
+  },
+  {
+    to: "/admin/sliders",
+    label: "Sliders",
+    icon: "sliders",
+  },
+  {
+    to: "/admin/admins",
+    label: "Admins",
+    icon: "admins",
+  },
+  {
+    to: "/admin/settings",
+    label: "Settings",
+    icon: "settings",
+  },
 ]
 
 export function AdminLayout() {
@@ -18,18 +54,13 @@ export function AdminLayout() {
   const navigate = useNavigate()
   const location = useLocation()
   const [open, setOpen] = useState(false)
+
   const displayName = user?.email.split("@")[0] ?? "admin"
 
   async function signOut() {
     await logout()
     navigate("/admin/login", { replace: true })
   }
-
-  const activePage = links.find((link) =>
-    link.end
-      ? location.pathname === link.to
-      : location.pathname.startsWith(link.to),
-  )
 
   return (
     <div className="admin-shell">
@@ -41,8 +72,12 @@ export function AdminLayout() {
           aria-label="ETA Company dashboard"
         >
           <span className="sidebar-logo">
-            <img src={logo} alt="" />
+            <img
+              src={logo}
+              alt=""
+            />
           </span>
+
           <div>
             <strong>ETA Company</strong>
             <small>Admin Panel</small>
@@ -65,13 +100,14 @@ export function AdminLayout() {
 
         <div className="sidebar-footer">
           <strong>{displayName}</strong>
+
           <button
-            className="sidebar-signout"
+            className="sidebar-signOut"
             title="Sign out"
             onClick={() => void signOut()}
           >
             <Icon name="logout" />
-            <span>Sign out</span>
+            <span>Logout</span>
           </button>
         </div>
       </aside>
@@ -93,8 +129,16 @@ export function AdminLayout() {
           >
             <Icon name="menu" />
           </button>
-          <span>{activePage?.label ?? "Admin Panel"}</span>
+
+          <span>
+            {links.find((link) =>
+              link.end
+                ? location.pathname === link.to
+                : location.pathname.startsWith(link.to),
+            )?.label ?? "Admin Panel"}
+          </span>
         </header>
+
         <main>
           <Outlet />
         </main>
