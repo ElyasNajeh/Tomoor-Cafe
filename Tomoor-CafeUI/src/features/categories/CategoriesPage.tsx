@@ -1,34 +1,18 @@
 import { useState } from "react"
 import { PageHeader, Pagination } from "@/shared/components/AdminComponents"
 import type { Category } from "./categories.types"
+import { CategoryFilters } from "./components/CategoryFilters"
 import { CategoryFormDialog } from "./components/CategoryFormDialog"
-import { CategoryGrid } from "./components/CategoryGrid"
-import { CategorySearch } from "./components/CategorySearch"
+import { CategoryTable } from "./components/CategoryTable"
 import { useCategories } from "./hooks/useCategories"
 
 type EditingCategory = Category | null | undefined
 
-function getInitialEditingCategory(): EditingCategory {
-  return new URLSearchParams(window.location.search).has("new") ? null : undefined
-}
-
 export function CategoriesPage() {
   const categories = useCategories()
-  const [editingCategory, setEditingCategory] = useState<EditingCategory>(
-    getInitialEditingCategory,
+  const [editingCategory, setEditingCategory] = useState<EditingCategory>(() =>
+    new URLSearchParams(window.location.search).has("new") ? null : undefined,
   )
-
-  function openCreateDialog() {
-    setEditingCategory(null)
-  }
-
-  function openEditDialog(category: Category) {
-    setEditingCategory(category)
-  }
-
-  function closeDialog() {
-    setEditingCategory(undefined)
-  }
 
   return (
     <section>
@@ -37,20 +21,23 @@ export function CategoriesPage() {
         icon="categories"
         title="Categories"
         description="Organize your menu into clear, visual collections."
-        actions={<button className="button" onClick={openCreateDialog}>+ Add category</button>}
+        actions={<button className="button" onClick={() => setEditingCategory(null)}>+ Add category</button>}
       />
 
-      <CategorySearch
+      <CategoryFilters
         value={categories.search}
+        status={categories.statusFilter}
         onChange={categories.setSearch}
+        onStatusChange={categories.setStatusFilter}
       />
 
-      <CategoryGrid
+      <CategoryTable
         items={categories.items}
         loading={categories.loading}
         error={categories.error}
-        onCreate={openCreateDialog}
-        onEdit={openEditDialog}
+        onCreate={() => setEditingCategory(null)}
+        onEdit={setEditingCategory}
+        onToggle={(category) => void categories.toggleCategory(category)}
         onDelete={(category) => void categories.deleteCategory(category)}
         onRetry={() => void categories.reload()}
       />
@@ -59,7 +46,7 @@ export function CategoriesPage() {
         <CategoryFormDialog
           key={editingCategory?.id ?? "new"}
           category={editingCategory}
-          onClose={closeDialog}
+          onClose={() => setEditingCategory(undefined)}
           onSave={categories.saveCategory}
         />
       )}

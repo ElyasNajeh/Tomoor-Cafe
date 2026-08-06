@@ -24,7 +24,10 @@ def create_product(db: Session, product_data: ProductCreate):
     )
     if not exist_category:
         raise HTTPException(status_code=400, detail="Category not found")
-    product = Product(**product_data.model_dump())
+    values = product_data.model_dump()
+    if not exist_category.is_active:
+        values["is_active"] = False
+    product = Product(**values)
     return crud.create(db, product)
 
 
@@ -78,8 +81,11 @@ def update_product(db: Session, product_id: int, product_data: ProductCreate):
     if not exist_category:
         raise HTTPException(status_code=400, detail="Category not found")
 
+    values = product_data.model_dump()
+    if not exist_category.is_active:
+        values["is_active"] = False
     updated_product = crud.update_by_id(
-        db, Product, product_id, product_data.model_dump()
+        db, Product, product_id, values
     )
     return updated_product
 
@@ -162,6 +168,14 @@ def toggle_product_status(db: Session, product_id: int):
     if not product:
 
         raise HTTPException(status_code=404, detail="Product not found")
+
+    if not product.is_active:
+        category = crud.get_by_id(db, Category, product.category_id)
+        if not category or not category.is_active:
+            raise HTTPException(
+                status_code=409,
+                detail="Activate the category before activating this product",
+            )
 
     product.is_active = not product.is_active
 

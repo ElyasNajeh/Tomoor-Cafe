@@ -4,8 +4,12 @@ import type { Category, CategoryPayload } from "./categories.types"
 
 export type { Category, CategoryPayload } from "./categories.types"
 
+type CategoryListParams = PaginationParams & {
+  is_active?: boolean
+}
+
 export const CategoriesApi = {
-  list(params: PaginationParams = {}) {
+  list(params: CategoryListParams = {}) {
     const query = createQueryString(params)
     return apiRequest<PageResult<Category>>(`/categories/?${query}`)
   },
@@ -22,6 +26,7 @@ export const CategoriesApi = {
     })
   },
   delete: (id: number) => apiRequest<void>(`/categories/${id}`, { method: "DELETE" }),
+  toggle: (id: number) => apiRequest<Category>(`/categories/${id}/toggle-status`, { method: "PATCH" }),
   async upload(file: File) {
     const body = new FormData()
     body.append("file", file)

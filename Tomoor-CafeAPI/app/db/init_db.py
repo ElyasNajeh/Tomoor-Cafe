@@ -2,6 +2,7 @@ from app.db.base import Base
 from app.db.session import engine, sessionLocal
 from sqlalchemy import inspect, text
 from app.core.security import hash_password
+from app.db.seed_catalog import seed_catalog
 
 from app.features.categories.model import Category
 from app.features.products.model import Product, ProductImage
@@ -27,8 +28,12 @@ def migrate_admin_catalog():
                 connection.execute(text("UPDATE admins SET email = LOWER(username) || '@legacy.eta.local' WHERE email IS NULL"))
             connection.execute(text("ALTER TABLE admins ALTER COLUMN email SET NOT NULL"))
             connection.execute(text("CREATE UNIQUE INDEX IF NOT EXISTS ix_admins_email ON admins (email)"))
+        if "username" in admin_columns:
+            connection.execute(text("ALTER TABLE admins DROP COLUMN username"))
         if "image" not in category_columns:
             connection.execute(text("ALTER TABLE categories ADD COLUMN image VARCHAR(255)"))
+        if "is_active" not in category_columns:
+            connection.execute(text("ALTER TABLE categories ADD COLUMN is_active BOOLEAN NOT NULL DEFAULT TRUE"))
         if "is_drink" not in product_columns:
             connection.execute(text("ALTER TABLE products ADD COLUMN is_drink BOOLEAN NOT NULL DEFAULT FALSE"))
         for column in ("small_price", "medium_price", "large_price"):
@@ -50,4 +55,5 @@ def init_db():
             dev_admin = Admin(email="a@gmail.com", hashed_password="")
             db.add(dev_admin)
         dev_admin.hashed_password = hash_password("1234")
+        seed_catalog(db)
         db.commit()

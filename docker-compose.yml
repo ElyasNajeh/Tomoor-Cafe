@@ -20,6 +20,20 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+
+  adminer:
+    image: adminer:latest
+    container_name: tomoor-adminer
+
+    restart: unless-stopped
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      - postgres
+
+
   api:
     build:
       context: ./Tomoor-CafeAPI
@@ -39,6 +53,8 @@ services:
 
     volumes:
       - uploads_data:/app/uploads
+      - ./Tomoor-CafeUI/src/assets:/app/seed-assets:ro
+
 
   ui:
     build:
@@ -56,6 +72,7 @@ services:
 
     depends_on:
       - api
+
 
 volumes:
   postgres_data:

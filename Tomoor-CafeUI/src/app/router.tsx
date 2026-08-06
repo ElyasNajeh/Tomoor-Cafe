@@ -9,9 +9,10 @@ import { ProtectedRoute } from "@/features/auth/ProtectedRoute"
 import { LoginPage } from "@/features/auth/LoginPage"
 
 import { AdminLayout } from "@/layouts/AdminLayout"
-import { DashboardPage } from "@/features/admin/DashboardPage"
+import { DashboardPage } from "@/features/dashboard/DashboardPage"
 import { CategoriesPage } from "@/features/categories/CategoriesPage"
 import { ProductsPage } from "@/features/products/ProductsPage"
+import { SlidersPage } from "@/features/sliders/SlidersPage"
 import { AdminsPage } from "@/features/admins/AdminsPage"
 import { SettingsPage } from "@/features/settings/SettingsPage"
 
@@ -43,6 +44,7 @@ export const router = createBrowserRouter([
       },
       { path: "categories", element: <CategoriesPage /> },
       { path: "products", element: <ProductsPage /> },
+      { path: "sliders", element: <SlidersPage /> },
       { path: "admins", element: <AdminsPage /> },
       { path: "settings", element: <SettingsPage /> },
     ],

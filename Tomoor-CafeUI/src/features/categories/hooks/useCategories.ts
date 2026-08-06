@@ -11,6 +11,7 @@ export function useCategories() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [search, setSearchValue] = useState("")
+  const [statusFilter, setStatusFilterValue] = useState("")
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [totalItems, setTotalItems] = useState(0)
@@ -20,7 +21,12 @@ export function useCategories() {
     setError("")
 
     try {
-      const result = await CategoriesApi.list({ page, limit: PAGE_SIZE, search })
+      const result = await CategoriesApi.list({
+        page,
+        limit: PAGE_SIZE,
+        search,
+        is_active: statusFilter ? statusFilter === "true" : undefined,
+      })
       setItems(result.items)
       setTotalPages(result.total_pages)
       setTotalItems(result.total_items)
@@ -29,7 +35,7 @@ export function useCategories() {
     } finally {
       setLoading(false)
     }
-  }, [page, search])
+  }, [page, search, statusFilter])
 
   useEffect(() => {
     // Synchronize the current query with the server.
@@ -39,6 +45,11 @@ export function useCategories() {
 
   function setSearch(value: string) {
     setSearchValue(value)
+    setPage(1)
+  }
+
+  function setStatusFilter(value: string) {
+    setStatusFilterValue(value)
     setPage(1)
   }
 
@@ -80,18 +91,39 @@ export function useCategories() {
     }
   }
 
+  async function toggleCategory(category: Category) {
+    try {
+      await CategoriesApi.toggle(category.id)
+      toast.success(
+        category.is_active ? "Category hidden" : "Category activated",
+        category.is_active
+          ? `${category.name_en} and all of its products are now hidden from the menu.`
+          : `${category.name_en} is now visible. Its products remain hidden until you activate them.`,
+      )
+      await loadCategories()
+    } catch (caught) {
+      toast.error(
+        "Status update failed",
+        caught instanceof Error ? caught.message : undefined,
+      )
+    }
+  }
+
   return {
     items,
     loading,
     error,
     search,
+    statusFilter,
     page,
     totalPages,
     totalItems,
     setSearch,
+    setStatusFilter,
     setPage,
     reload: loadCategories,
     saveCategory,
     deleteCategory,
+    toggleCategory,
   }
 }

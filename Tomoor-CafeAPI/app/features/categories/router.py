@@ -29,9 +29,10 @@ def create_category(
 @router.get("/")
 def get_categories(
     page: int = Query(1, ge=1), limit: int = Query(12, ge=1, le=100),
-    search: str | None = Query(None, max_length=255), db: Session = Depends(get_db),
+    search: str | None = Query(None, max_length=255), is_active: bool | None = None,
+    db: Session = Depends(get_db),
 ):
-    return service.get_categories(db, page, limit, search)
+    return service.get_categories(db, page, limit, search, is_active)
 
 
 @router.get("/{category_id}")
@@ -56,3 +57,12 @@ def delete_category(
     current_user: str = Depends(get_current_user),
 ):
     return service.delete_category(db, category_id)
+
+
+@router.patch("/{category_id}/toggle-status")
+def toggle_category_status(
+    category_id: int,
+    db: Session = Depends(get_db),
+    current_user: str = Depends(get_current_user),
+):
+    return service.toggle_category_status(db, category_id)

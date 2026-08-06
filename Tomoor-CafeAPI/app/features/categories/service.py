@@ -5,6 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from app.shared import crud
 from app.features.categories.model import Category
 from app.features.categories.schema import CategoryCreate
+from app.features.products.model import Product
 from app.shared.images import save_image
 
 
@@ -27,11 +28,19 @@ def create_category(db: Session, category_data: CategoryCreate):
     return crud.create(db, category)
 
 
-def get_categories(db: Session, page: int, limit: int, search: str | None):
+def get_categories(
+    db: Session,
+    page: int,
+    limit: int,
+    search: str | None,
+    is_active: bool | None,
+):
     query = db.query(Category)
     if search:
         term = f"%{search.strip()}%"
         query = query.filter((Category.name_ar.ilike(term)) | (Category.name_en.ilike(term)))
+    if is_active is not None:
+        query = query.filter(Category.is_active == is_active)
     total = query.count()
     items = query.order_by(Category.created_at.desc()).offset((page - 1) * limit).limit(limit).all()
     return {"items": items, "page": page, "limit": limit, "total_items": total,
@@ -64,10 +73,19 @@ def update_category(db: Session, category_id: int, category_data: CategoryCreate
     if exist_category:
         raise HTTPException(status_code=400, detail="Category already exists")
 
-    updated_category = crud.update_by_id(
-        db, Category, category_id, category_data.model_dump()
-    )
-    return updated_category
+    for field, value in category_data.model_dump().items():
+        setattr(category, field, value)
+
+    if not category.is_active:
+        _hide_category_products(db, category.id)
+
+    try:
+        db.commit()
+        db.refresh(category)
+        return category
+    except Exception:
+        db.rollback()
+        raise
 
 
 def delete_category(db: Session, category_id: int):
@@ -82,3 +100,28 @@ def delete_category(db: Session, category_id: int):
         raise HTTPException(status_code=404, detail="Category not found")
 
     return category
+
+
+def toggle_category_status(db: Session, category_id: int):
+    category = crud.get_by_id(db, Category, category_id)
+    if not category:
+        raise HTTPException(status_code=404, detail="Category not found")
+
+    category.is_active = not category.is_active
+    if not category.is_active:
+        _hide_category_products(db, category.id)
+
+    try:
+        db.commit()
+        db.refresh(category)
+        return category
+    except Exception:
+        db.rollback()
+        raise
+
+
+def _hide_category_products(db: Session, category_id: int):
+    db.query(Product).filter(
+        Product.category_id == category_id,
+        Product.is_active.is_(True),
+    ).update({Product.is_active: False}, synchronize_session=False)

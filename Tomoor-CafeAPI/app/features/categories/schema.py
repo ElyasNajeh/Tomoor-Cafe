@@ -5,6 +5,7 @@ class CategoryCreate(BaseModel):
     name_ar: str
     name_en: str
     image: str
+    is_active: bool = True
 
     @field_validator("name_ar", "name_en", "image")
     @classmethod

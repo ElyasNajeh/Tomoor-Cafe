@@ -9,6 +9,7 @@ const EMPTY_FORM: CategoryPayload = {
   name_ar: "",
   name_en: "",
   image: "",
+  is_active: true,
 }
 
 type CategoryFormDialogProps = {
@@ -22,6 +23,7 @@ export function CategoryFormDialog({ category, onClose, onSave }: CategoryFormDi
     name_ar: category.name_ar,
     name_en: category.name_en,
     image: category.image ?? "",
+    is_active: category.is_active,
   } : EMPTY_FORM)
   const [saving, setSaving] = useState(false)
   const [formError, setFormError] = useState("")
@@ -49,7 +51,7 @@ export function CategoryFormDialog({ category, onClose, onSave }: CategoryFormDi
 
   return (
     <div className="dialog-backdrop">
-      <form className="form-dialog" onSubmit={(event) => void handleSave(event)}>
+      <form className="form-dialog form-dialog--wide" onSubmit={(event) => void handleSave(event)}>
         <div className="form-dialog__header">
           <div>
             <span>Category details</span>
@@ -60,39 +62,58 @@ export function CategoryFormDialog({ category, onClose, onSave }: CategoryFormDi
           </button>
         </div>
 
-        <div className="form-grid">
-          <label>
-            English name
-            <input
-              value={form.name_en}
-              maxLength={255}
-              onChange={(event) => setForm({ ...form, name_en: event.target.value })}
-              disabled={saving}
-              required
-            />
-          </label>
-          <label>
-            Arabic name
-            <input
-              dir="rtl"
-              value={form.name_ar}
-              maxLength={255}
-              onChange={(event) => setForm({ ...form, name_ar: event.target.value })}
-              disabled={saving}
-              required
-            />
-          </label>
-        </div>
+        <fieldset className="form-section">
+          <legend>1. Basic Information</legend>
+          <div className="form-grid">
+            <label>
+              English name
+              <input
+                value={form.name_en}
+                maxLength={255}
+                onChange={(event) => setForm({ ...form, name_en: event.target.value })}
+                disabled={saving}
+                required
+              />
+            </label>
+            <label>
+              Arabic name
+              <input
+                dir="rtl"
+                value={form.name_ar}
+                maxLength={255}
+                onChange={(event) => setForm({ ...form, name_ar: event.target.value })}
+                disabled={saving}
+                required
+              />
+            </label>
+          </div>
+        </fieldset>
 
-        <label className="field-label">
-          Category image
+        <fieldset className="form-section">
+          <legend>2. Category Image</legend>
           <ImageUpload
             value={form.image}
             onChange={(image) => setForm({ ...form, image })}
             upload={CategoriesApi.upload}
             disabled={saving}
           />
-        </label>
+        </fieldset>
+
+        <fieldset className="form-section">
+          <legend>3. Status</legend>
+          <label className="switch-row">
+            <span>
+              <strong>Active on menu</strong>
+              <small>Hiding this category also hides every product inside it.</small>
+            </span>
+            <input
+              type="checkbox"
+              checked={form.is_active}
+              onChange={(event) => setForm({ ...form, is_active: event.target.checked })}
+              disabled={saving}
+            />
+          </label>
+        </fieldset>
 
         {formError && <p className="form-error">{formError}</p>}
 
