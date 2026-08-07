@@ -1,7 +1,6 @@
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client"
 import { RouterProvider } from "react-router-dom"
 
-import { AuthProvider } from "@/features/admin/auth/AuthProvider"
 import { FeedbackProvider } from "@/shared/feedback/FeedbackProvider"
 import {
   queryClient,
@@ -20,9 +19,7 @@ function App() {
       >
         <FeedbackProvider>
           <RequestProvider>
-            <AuthProvider>
-              <RouterProvider router={router} />
-            </AuthProvider>
+            <RouterProvider router={router} />
           </RequestProvider>
         </FeedbackProvider>
       </PersistQueryClientProvider>

@@ -7,6 +7,7 @@ import {
 
 import { ProtectedRoute } from "@/features/admin/auth/ProtectedRoute"
 import { LoginPage } from "@/features/admin/auth/LoginPage"
+import { AdminAuthRoute } from "@/features/admin/auth/AdminAuthRoute"
 
 import { AdminLayout } from "@/layouts/AdminLayout"
 import { DashboardPage } from "@/features/admin/dashboard/DashboardPage"
@@ -33,27 +34,31 @@ export const router = createBrowserRouter([
     element: <Navigate to="/admin/login" replace />,
   },
   {
-    path: "/admin/login",
-    element: <LoginPage />,
-  },
-
-  {
     path: "/admin",
-    element: (
-      <ProtectedRoute>
-        <AdminLayout />
-      </ProtectedRoute>
-    ),
+    element: <AdminAuthRoute />,
     children: [
       {
-        index: true,
-        element: <DashboardPage />,
+        path: "login",
+        element: <LoginPage />,
       },
-      { path: "categories", element: <CategoriesPage /> },
-      { path: "products", element: <ProductsPage /> },
-      { path: "sliders", element: <SlidersPage /> },
-      { path: "admins", element: <AdminsPage /> },
-      { path: "settings", element: <SettingsPage /> },
+      {
+        element: (
+          <ProtectedRoute>
+            <AdminLayout />
+          </ProtectedRoute>
+        ),
+        children: [
+          {
+            index: true,
+            element: <DashboardPage />,
+          },
+          { path: "categories", element: <CategoriesPage /> },
+          { path: "products", element: <ProductsPage /> },
+          { path: "sliders", element: <SlidersPage /> },
+          { path: "admins", element: <AdminsPage /> },
+          { path: "settings", element: <SettingsPage /> },
+        ],
+      },
     ],
   },
 ])
