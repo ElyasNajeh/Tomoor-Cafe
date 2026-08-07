@@ -36,9 +36,11 @@ export const queryPersistOptions = {
 }
 
 export const queryKeys = {
-  dashboardStats: ["dashboard", "stats"] as const,
-  products: ["products"] as const,
   categories: ["categories"] as const,
+  products: ["products"] as const,
   sliders: ["sliders"] as const,
+  branches: ["branches"] as const,
+  settings: ["settings"] as const,
   admins: ["admins"] as const,
+  dashboardStats: ["dashboard", "stats"] as const,
 }

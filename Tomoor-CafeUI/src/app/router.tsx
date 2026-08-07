@@ -5,21 +5,28 @@ import {
   Navigate,
 } from "react-router-dom"
 
-import { ProtectedRoute } from "@/features/auth/ProtectedRoute"
-import { LoginPage } from "@/features/auth/LoginPage"
+import { ProtectedRoute } from "@/features/admin/auth/ProtectedRoute"
+import { LoginPage } from "@/features/admin/auth/LoginPage"
 
 import { AdminLayout } from "@/layouts/AdminLayout"
-import { DashboardPage } from "@/features/dashboard/DashboardPage"
-import { CategoriesPage } from "@/features/categories/CategoriesPage"
-import { ProductsPage } from "@/features/products/ProductsPage"
-import { SlidersPage } from "@/features/sliders/SlidersPage"
-import { AdminsPage } from "@/features/admins/AdminsPage"
-import { SettingsPage } from "@/features/settings/SettingsPage"
+import { DashboardPage } from "@/features/admin/dashboard/DashboardPage"
+import { CategoriesPage } from "@/features/admin/categories/CategoriesPage"
+import { ProductsPage } from "@/features/admin/products/ProductsPage"
+import { SlidersPage } from "@/features/admin/sliders/SlidersPage"
+import { AdminsPage } from "@/features/admin/admins/AdminsPage"
+import { SettingsPage } from "@/features/admin/settings/SettingsPage"
+import { SiteLayout } from "@/layouts/SiteLayout"
+import { HomePage } from "@/features/site/home/HomePage"
+import { MenuPage } from "@/features/site/menu/MenuPage"
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <main className="public-placeholder"><h1>ETA Company</h1><p>Our public experience is coming soon.</p></main>,
+    element: <SiteLayout />,
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: "menu", element: <MenuPage /> },
+    ],
   },
   {
     path: "/login",

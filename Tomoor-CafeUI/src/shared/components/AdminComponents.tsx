@@ -1,6 +1,7 @@
 import { useRef, useState, type ChangeEvent, type ReactNode } from "react"
 import { getAssetUrl } from "@/shared/api/assets"
 import { Icon, type IconName } from "./Icon"
+import { useI18n } from "@/localization/useI18n"
 
 export function PageHeader({ eyebrow, title, description, actions, icon }: { eyebrow?: string; title: ReactNode; description?: string; actions?: ReactNode; icon?: IconName }) {
   return (
@@ -35,6 +36,7 @@ type LoadableContentProps = {
 }
 
 export function LoadableContent(props: LoadableContentProps) {
+  const { t } = useI18n()
   if (props.loading) {
     return <div className="loading-panel">{props.loadingMessage}</div>
   }
@@ -45,7 +47,7 @@ export function LoadableContent(props: LoadableContentProps) {
         <p>{props.error}</p>
         {props.onRetry && (
           <button className="button button--secondary" onClick={props.onRetry}>
-            Try again
+            {t("admin.common.tryAgain")}
           </button>
         )}
       </div>
@@ -56,17 +58,19 @@ export function LoadableContent(props: LoadableContentProps) {
 }
 
 export function StatusBadge({ active }: { active: boolean }) {
+  const { t } = useI18n()
   const className = active ? "status-badge--active" : "status-badge--hidden"
 
   return (
     <span className={`status-badge ${className}`}>
       <i />
-      {active ? "Active" : "Hidden"}
+      {t(active ? "admin.common.active" : "admin.common.hidden")}
     </span>
   )
 }
 
 export function Pagination({ page, totalPages, totalItems, onChange }: { page: number; totalPages: number; totalItems: number; onChange: (page: number) => void }) {
+  const { t, formatNumber } = useI18n()
   if (totalPages <= 1) {
     return null
   }
@@ -77,9 +81,9 @@ export function Pagination({ page, totalPages, totalItems, onChange }: { page: n
     ))
 
   return (
-    <nav className="pagination" aria-label="Pagination">
-      <span className="pagination__total">{totalItems} items</span>
-      <button disabled={page === 1} onClick={() => onChange(page - 1)}>Previous</button>
+    <nav className="pagination" aria-label={t("admin.common.pagination")}>
+      <span className="pagination__total">{formatNumber(totalItems)} {t("common.items")}</span>
+      <button disabled={page === 1} onClick={() => onChange(page - 1)}>{t("admin.common.previous")}</button>
       <div className="pagination__pages">
         {pages.map((value, index) => (
           <span key={value}>
@@ -94,8 +98,8 @@ export function Pagination({ page, totalPages, totalItems, onChange }: { page: n
           </span>
         ))}
       </div>
-      <strong>Page {page} of {totalPages}</strong>
-      <button disabled={page === totalPages} onClick={() => onChange(page + 1)}>Next</button>
+      <strong>{t("admin.common.pageOf", { page: formatNumber(page), total: formatNumber(totalPages) })}</strong>
+      <button disabled={page === totalPages} onClick={() => onChange(page + 1)}>{t("admin.common.next")}</button>
     </nav>
   )
 }
@@ -104,6 +108,7 @@ export function ImageUpload({ value, onChange, upload, disabled }: { value: stri
   const inputRef = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState("")
+  const { t } = useI18n()
   async function select(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
     if (!file) {
@@ -114,14 +119,14 @@ export function ImageUpload({ value, onChange, upload, disabled }: { value: stri
     try {
       onChange(await upload(file))
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Image upload failed")
+      setError(caught instanceof Error ? caught.message : t("admin.common.uploadFailed"))
     } finally {
       setUploading(false)
       event.target.value = ""
     }
   }
   return <div className="image-upload">
-    <div className="image-upload__preview">{value ? <img src={getAssetUrl(value)} alt="Upload preview" /> : <span>Image preview</span>}</div>
+    <div className="image-upload__preview">{value ? <img src={getAssetUrl(value)} alt={t("admin.common.uploadPreview")} /> : <span>{t("admin.common.imagePreview")}</span>}</div>
     <div>
       <input
         ref={inputRef}
@@ -136,9 +141,9 @@ export function ImageUpload({ value, onChange, upload, disabled }: { value: stri
         disabled={disabled || uploading}
         onClick={() => inputRef.current?.click()}
       >
-        {uploading ? "Uploading…" : value ? "Replace image" : "Choose image"}
+        {uploading ? t("admin.common.uploading") : value ? t("admin.common.replaceImage") : t("admin.common.chooseImage")}
       </button>
-      <small>JPEG, PNG, WebP or GIF. Maximum 5 MB.</small>
+      <small>{t("admin.common.imageHelp")}</small>
       {error && <p className="field-error">{error}</p>}
     </div>
   </div>

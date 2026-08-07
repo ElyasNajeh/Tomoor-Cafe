@@ -1,0 +1,330 @@
+{
+  "language": {
+    "switch": "التبديل للإنجليزية",
+    "switchTo": "EN"
+  },
+  "common": {
+    "all": "الكل",
+    "item": "صنف",
+    "items": "أصناف",
+    "currency": "₪"
+  },
+  "site": {
+    "nav": {
+      "story": "قصتنا",
+      "menu": "القائمة",
+      "visit": "زورنا",
+      "contact": "تواصل معنا",
+      "label": "التنقل الرئيسي",
+      "open": "فتح القائمة",
+      "close": "إغلاق القائمة"
+    },
+    "brandHome": "الصفحة الرئيسية لمقهى تمور",
+    "socials": "حسابات مقهى تمور",
+    "directions": "الاتجاهات",
+    "details": {
+      "address": "رام الله، فلسطين",
+      "addressDetail": "آيكون مول · الطابق الخامس",
+      "openingDays": "الجمعة — السبت",
+      "openingTime": "7:00 صباحاً — 11:00 مساءً",
+      "hours": "الجمعة — السبت · 7:00 صباحاً — 11:00 مساءً",
+      "city": "رام الله"
+    },
+    "footer": {
+      "backToTop": "الرجوع لفوق",
+      "madeWithCare": "صُنع بعناية في فلسطين",
+      "teamLogin": "دخول الفريق"
+    },
+    "home": {
+      "heroLabel": "مقهى تمور",
+      "heroImages": "صور الواجهة",
+      "showImage": "عرض الصورة {{number}}",
+      "slides": {
+        "oneTitle": "أهلاً وسهلاً في تمور",
+        "oneSubtitle": "قهوة · تمر · حكاية",
+        "twoTitle": "لحظات بتجمعنا",
+        "twoSubtitle": "مذاق بضل بالبال",
+        "threeTitle": "بنحضّرها بحب",
+        "threeSubtitle": "كل يوم"
+      },
+      "categories": "أقسام القائمة",
+      "nextCategory": "القسم التالي",
+      "previousCategory": "القسم السابق",
+      "featuredSliders": "الشرائح المميزة",
+      "nextSlider": "الشريحة التالية",
+      "previousSlider": "الشريحة السابقة",
+      "storyEyebrow": "قصتنا",
+      "storyLead": "مقهى دافي في رام الله، بنجمع فيه القهوة المحضّرة بعناية، والتمور المختارة، والمخبوزات الطازجة؛ مكان بسيط ورايق للقعدة واللقاء.",
+      "baristaAlt": "باريستا مقهى تمور بطحن القهوة الطازجة",
+      "established": "منذ",
+      "visit": "زورنا",
+      "address": "العنوان",
+      "openingHours": "ساعات الدوام",
+      "callAhead": "اتصل فينا",
+      "mapTitle": "موقع مقهى تمور",
+      "openMap": "افتح الخريطة",
+      "openMapLabel": "فتح موقع مقهى تمور على خرائط جوجل",
+      "contact": "تواصل معنا",
+      "stats": {
+        "label": "أرقام مقهى تمور",
+        "customers": "زبون مبسوط",
+        "products": "منتج",
+        "years": "سنوات خبرة"
+      }
+    }
+  },
+  "menu": {
+    "backHome": "الرجوع للرئيسية",
+    "home": "الرئيسية",
+    "title": "القائمة",
+    "subtitle": "قائمة تمور",
+    "searchLabel": "البحث بالقائمة",
+    "searchPlaceholder": "دوّر بالاسم أو القسم…",
+    "clearSearch": "امسح البحث",
+    "priceFilter": "فلترة حسب السعر",
+    "priceFilters": {
+      "all": "كل الأسعار",
+      "under15": "₪15 أو أقل",
+      "between15And20": "₪16–20",
+      "over20": "أكثر من ₪20"
+    },
+    "findFavourite": "اختار اللي بتحبه",
+    "categories": "الأقسام",
+    "categoryTabs": "أقسام القائمة",
+    "preview": "بنعرض قائمة تجريبية لحد ما نرجع نتصل ببيانات المقهى.",
+    "ourMenu": "قائمتنا",
+    "allMenu": "القائمة كاملة",
+    "resultsFor": "نتائج البحث عن «{{query}}»",
+    "preparing": "بنجهّز القائمة…",
+    "nothingFound": "ما لقينا نتائج",
+    "tryAnother": "جرّب اسم أو قسم ثاني.",
+    "chooseAnother": "اختار قسم ثاني.",
+    "backCategories": "الرجوع للأقسام",
+    "availableSizes": "الأحجام والأسعار المتوفرة",
+    "small": "صغير",
+    "medium": "وسط",
+    "large": "كبير",
+    "showPrices": "اعرض الأسعار",
+    "showDescription": "اعرض الوصف",
+    "tapDetails": "اضغط للتفاصيل",
+    "tapPrices": "اضغط لعرض الأسعار",
+    "fallbackDescription": "بنحضّره بعناية وبنقدّمه طازة في مقهى تمور."
+  },
+  "admin": {
+    "panel": "لوحة الإدارة",
+    "dashboard": "الرئيسية",
+    "categories": "الأقسام",
+    "products": "المنتجات",
+    "sliders": "الشرائح",
+    "admins": "المشرفين",
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج",
+    "signOut": "تسجيل الخروج",
+    "openNavigation": "فتح التنقل",
+    "closeNavigation": "إغلاق التنقل",
+    "login": {
+      "title": "لوحة الإدارة",
+      "subtitle": "سجّل دخولك لإدارة المتجر",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "showPassword": "إظهار كلمة المرور",
+      "hidePassword": "إخفاء كلمة المرور",
+      "signIn": "تسجيل الدخول",
+      "signingIn": "جاري تسجيل الدخول",
+      "checking": "جاري التحقق من جلسة الإدارة",
+      "notice": "للمشرفين المخوّلين في شركة ETA فقط.",
+      "error": "ما قدرنا نسجّل الدخول. جرّب مرة ثانية."
+    },
+    "common": {
+      "tryAgain": "جرّب مرة ثانية",
+      "active": "فعّال",
+      "hidden": "مخفي",
+      "pagination": "التنقل بين الصفحات",
+      "previous": "السابق",
+      "next": "التالي",
+      "pageOf": "صفحة {{page}} من {{total}}",
+      "uploadFailed": "فشل رفع الصورة",
+      "uploadPreview": "معاينة الصورة المرفوعة",
+      "imagePreview": "معاينة الصورة",
+      "uploading": "جاري الرفع…",
+      "replaceImage": "بدّل الصورة",
+      "chooseImage": "اختار صورة",
+      "imageHelp": "JPEG أو PNG أو WebP أو GIF، بحد أقصى 5 ميجابايت."
+    },
+    "forms": {
+      "common": {
+        "cancel": "إلغاء",
+        "close": "إغلاق",
+        "saving": "جاري الحفظ…",
+        "sections": {
+          "status": "3. الحالة"
+        }
+      },
+      "fields": {
+        "englishName": "الاسم بالإنجليزية",
+        "arabicName": "الاسم بالعربية",
+        "englishTitle": "العنوان بالإنجليزية",
+        "arabicTitle": "العنوان بالعربية",
+        "category": "القسم",
+        "englishDescription": "الوصف بالإنجليزية",
+        "arabicDescription": "الوصف بالعربية",
+        "price": "السعر"
+      },
+      "product": {
+        "eyebrow": "صنف بالقائمة",
+        "newTitle": "منتج جديد",
+        "editTitle": "تعديل المنتج",
+        "save": "حفظ المنتج",
+        "chooseCategory": "اختار قسم",
+        "sections": {
+          "basic": "1. المعلومات الأساسية",
+          "image": "2. صورة المنتج",
+          "type": "3. نوع المنتج",
+          "pricing": "4. الأسعار",
+          "status": "5. الحالة"
+        },
+        "drink": "مشروب",
+        "drinkHelp": "أسعار للأحجام الصغير والوسط والكبير",
+        "food": "أكل / غيره",
+        "foodHelp": "سعر واحد",
+        "smallPrice": "سعر الحجم الصغير",
+        "mediumPrice": "سعر الحجم الوسط",
+        "largePrice": "سعر الحجم الكبير",
+        "activeLabel": "ظاهر بالقائمة",
+        "activeHelp": "الزبائن بقدروا يشوفوا هالمنتج ويطلبوه.",
+        "validation": {
+          "required": "القسم واسما المنتج والصورة مطلوبين.",
+          "drinkPrice": "أضف سعر واحد على الأقل أكبر من صفر لأحد الأحجام.",
+          "singlePrice": "أضف سعر أكبر من صفر.",
+          "saveFailed": "ما قدرنا نحفظ المنتج"
+        }
+      },
+      "slider": {
+        "eyebrow": "شريحة الصفحة الرئيسية",
+        "newTitle": "شريحة جديدة",
+        "editTitle": "تعديل الشريحة",
+        "save": "حفظ الشريحة",
+        "sections": {
+          "info": "1. معلومات الشريحة",
+          "image": "2. صورة الشريحة"
+        },
+        "displayOrder": "ترتيب العرض",
+        "displayOrderHelp": "لازم يكون لكل شريحة رقم ترتيب مختلف.",
+        "activeLabel": "ظاهرة بالصفحة الرئيسية",
+        "activeHelp": "الزوار بقدروا يشوفوا هالشريحة.",
+        "validation": {
+          "required": "العنوان بالعربية والعنوان بالإنجليزية والصورة مطلوبين.",
+          "displayOrder": "لازم يكون ترتيب العرض رقم صحيح يساوي صفر أو أكبر.",
+          "saveFailed": "ما قدرنا نحفظ الشريحة"
+        }
+      },
+      "category": {
+        "eyebrow": "تفاصيل القسم",
+        "newTitle": "قسم جديد",
+        "editTitle": "تعديل القسم",
+        "save": "حفظ القسم",
+        "sections": {
+          "basic": "1. المعلومات الأساسية",
+          "image": "2. صورة القسم"
+        },
+        "activeLabel": "ظاهر بالقائمة",
+        "activeHelp": "إذا أخفيت هالقسم، كل المنتجات اللي فيه رح تنخفي كمان.",
+        "validation": {
+          "required": "الاسم بالعربية والاسم بالإنجليزية والصورة مطلوبين.",
+          "saveFailed": "ما قدرنا نحفظ القسم"
+        }
+      },
+      "admin": {
+        "eyebrow": "حساب جديد",
+        "newTitle": "إضافة مشرف",
+        "save": "إضافة مشرف",
+        "adding": "جاري الإضافة…",
+        "email": "البريد الإلكتروني",
+        "temporaryPassword": "كلمة مرور مؤقتة",
+        "passwordHelp": "4 أحرف على الأقل.",
+        "validation": {
+          "required": "البريد الإلكتروني وكلمة المرور المؤقتة مطلوبين.",
+          "passwordLength": "لازم تكون كلمة المرور 4 أحرف على الأقل.",
+          "saveFailed": "ما قدرنا نضيف المشرف"
+        }
+      }
+    },
+    "pages": {
+      "dashboardEyebrow": "نظرة عامة",
+      "welcome": "أهلاً برجعتك، {{name}}",
+      "dashboardDescription": "أدِر متجرك من مكان واحد.",
+      "dashboardError": "تعذّر تحميل لوحة المعلومات",
+      "categoriesEyebrow": "تنظيم القائمة",
+      "categoriesDescription": "رتّب قائمتك ضمن أقسام واضحة ومرتبة.",
+      "addCategory": "إضافة قسم",
+      "productsEyebrow": "قائمة المقهى",
+      "productsDescription": "إدارة الأصناف والأسعار والتوفر والصور.",
+      "addProduct": "إضافة منتج",
+      "slidersEyebrow": "الصفحة الرئيسية",
+      "slidersDescription": "إدارة الشرائح الترويجية وترتيبها وظهورها وصورها.",
+      "addSlider": "إضافة شريحة",
+      "adminsEyebrow": "التحكم بالوصول",
+      "adminsDescription": "إدارة الأشخاص اللي بقدروا يوصلوا للوحة إدارة شركة ETA.",
+      "addAdmin": "إضافة مشرف",
+      "settingsEyebrow": "التفضيلات",
+      "settingsDescription": "خصّص شكل لوحة إدارة شركة ETA.",
+      "appearance": "المظهر",
+      "appearanceDescription": "اختار شكل مساحة الإدارة على هالجهاز.",
+      "appearanceThemes": "خيارات المظهر",
+      "menuQr": "رمز QR للقائمة",
+      "menuQrDescription": "جهّز بطاقة صغيرة للطاولات تنقل الزبائن للقائمة العامة.",
+      "menuQrPreview": "معاينة للطباعة",
+      "menuQrBrand": "مقهى تمور",
+      "tomoorMenuQrHeading": "قائمة تمور",
+      "menuQrLogoAlt": "شعار مقهى تمور",
+      "scanForMenu": "امسح الرمز لعرض القائمة",
+      "generatePrintMenuQr": "إنشاء / طباعة رمز القائمة",
+      "printMenuQr": "طباعة",
+      "light": "فاتح",
+      "lightDescription": "مساحة عمل مشرقة ونظيفة",
+      "dark": "داكن",
+      "darkDescription": "مساحة عمل هادية بإضاءة منخفضة",
+      "select": "اختيار"
+    },
+    "management": {
+      "searchCategories": "البحث بالأقسام…",
+      "searchProducts": "البحث بالمنتجات…",
+      "searchSliders": "البحث بالشرائح…",
+      "filterStatus": "فلترة حسب الحالة",
+      "filterCategory": "فلترة حسب القسم",
+      "allStatuses": "كل الحالات",
+      "allCategories": "كل الأقسام",
+      "loadingCategories": "جاري تحميل الأقسام…",
+      "loadingProducts": "جاري تحميل المنتجات…",
+      "loadingSliders": "جاري تحميل الشرائح…",
+      "loadingAdmins": "جاري تحميل المشرفين…",
+      "noCategories": "لسه ما في أقسام",
+      "noCategoriesMessage": "أضف أول قسم عشان تبدأ ترتّب الكتالوج.",
+      "noProducts": "لسه ما في منتجات",
+      "noProductsMessage": "أضف أول مشروب أو صنف أكل للكتالوج.",
+      "categoryRequired": "أضف قسم قبل ما تضيف منتجات.",
+      "noSliders": "لسه ما في شرائح",
+      "noSlidersMessage": "أضف شريحة ترويجية للصفحة الرئيسية.",
+      "noAdmins": "ما في مشرفين",
+      "noAdminsMessage": "أضف مشرف عشان توفّر وصول آمن.",
+      "category": "القسم",
+      "product": "المنتج",
+      "slider": "الشريحة",
+      "created": "تاريخ الإنشاء",
+      "status": "الحالة",
+      "actions": "الإجراءات",
+      "pricing": "الأسعار",
+      "order": "الترتيب",
+      "edit": "تعديل",
+      "hide": "إخفاء",
+      "activate": "تفعيل",
+      "delete": "حذف",
+      "unknown": "غير معروف",
+      "singlePrice": "سعر واحد",
+      "drinkSizes": "أحجام المشروب",
+      "currentAccount": "الحساب الحالي",
+      "cannotDeleteSelf": "ما بتقدر تحذف حسابك",
+      "deleteAdmin": "حذف المشرف"
+    }
+  }
+}

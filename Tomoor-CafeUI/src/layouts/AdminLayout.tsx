@@ -6,45 +6,47 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom"
-import { useAuth } from "@/features/auth/AuthProvider"
+import { useAuth } from "@/features/admin/auth/AuthProvider"
 import { Icon, type IconName } from "@/shared/components/Icon"
 import logo from "@/assets/logo.png"
+import { LanguageSwitcher } from "@/localization/LanguageSwitcher"
+import { useI18n } from "@/localization/useI18n"
 
 const links: {
   to: string
-  label: string
+  labelKey: string
   icon: IconName
   end?: boolean
 }[] = [
   {
     to: "/admin",
-    label: "Dashboard",
+    labelKey: "admin.dashboard",
     icon: "dashboard",
     end: true,
   },
   {
     to: "/admin/categories",
-    label: "Categories",
+    labelKey: "admin.categories",
     icon: "categories",
   },
   {
     to: "/admin/products",
-    label: "Products",
+    labelKey: "admin.products",
     icon: "products",
   },
   {
     to: "/admin/sliders",
-    label: "Sliders",
+    labelKey: "admin.sliders",
     icon: "sliders",
   },
   {
     to: "/admin/admins",
-    label: "Admins",
+    labelKey: "admin.admins",
     icon: "admins",
   },
   {
     to: "/admin/settings",
-    label: "Settings",
+    labelKey: "admin.settings",
     icon: "settings",
   },
 ]
@@ -54,8 +56,10 @@ export function AdminLayout() {
   const navigate = useNavigate()
   const location = useLocation()
   const [open, setOpen] = useState(false)
+  const { direction, t } = useI18n()
 
   const displayName = user?.email.split("@")[0] ?? "admin"
+  const activeLink = links.find((link) => link.end ? location.pathname === link.to : location.pathname.startsWith(link.to))
 
   async function signOut() {
     await logout()
@@ -63,7 +67,7 @@ export function AdminLayout() {
   }
 
   return (
-    <div className="admin-shell">
+    <div className="admin-shell" dir={direction}>
       <aside className={open ? "open" : ""}>
         <Link
           className="sidebar-brand"
@@ -80,7 +84,7 @@ export function AdminLayout() {
 
           <div>
             <strong>ETA Company</strong>
-            <small>Admin Panel</small>
+            <small>{t("admin.panel")}</small>
           </div>
         </Link>
 
@@ -93,7 +97,7 @@ export function AdminLayout() {
               onClick={() => setOpen(false)}
             >
               <Icon name={link.icon} />
-              {link.label}
+              {t(link.labelKey)}
             </NavLink>
           ))}
         </nav>
@@ -102,12 +106,12 @@ export function AdminLayout() {
           <strong>{displayName}</strong>
 
           <button
-            className="sidebar-signOut"
-            title="Sign out"
+            className="sidebar-signout"
+            title={t("admin.signOut")}
             onClick={() => void signOut()}
           >
             <Icon name="logout" />
-            <span>Logout</span>
+            <span>{t("admin.logout")}</span>
           </button>
         </div>
       </aside>
@@ -115,7 +119,7 @@ export function AdminLayout() {
       {open && (
         <button
           className="drawer-backdrop"
-          aria-label="Close navigation"
+          aria-label={t("admin.closeNavigation")}
           onClick={() => setOpen(false)}
         />
       )}
@@ -124,19 +128,16 @@ export function AdminLayout() {
         <header className="admin-topbar">
           <button
             className="menu-button"
-            aria-label="Open navigation"
+            aria-label={t("admin.openNavigation")}
             onClick={() => setOpen(true)}
           >
             <Icon name="menu" />
           </button>
 
           <span>
-            {links.find((link) =>
-              link.end
-                ? location.pathname === link.to
-                : location.pathname.startsWith(link.to),
-            )?.label ?? "Admin Panel"}
+            {activeLink ? t(activeLink.labelKey) : t("admin.panel")}
           </span>
+          <div><LanguageSwitcher /></div>
         </header>
 
         <main>

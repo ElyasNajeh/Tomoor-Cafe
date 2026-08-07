@@ -1,0 +1,330 @@
+{
+  "language": {
+    "switch": "Switch to Arabic",
+    "switchTo": "العربية"
+  },
+  "common": {
+    "all": "All",
+    "item": "item",
+    "items": "items",
+    "currency": "₪"
+  },
+  "site": {
+    "nav": {
+      "story": "Story",
+      "menu": "Menu",
+      "visit": "Visit",
+      "contact": "Contact",
+      "label": "Main navigation",
+      "open": "Open menu",
+      "close": "Close menu"
+    },
+    "brandHome": "Tomoor Café home",
+    "socials": "Tomoor Café social media",
+    "directions": "Directions",
+    "details": {
+      "address": "West Bank, Ramallah",
+      "addressDetail": "ICON Mall · Fifth floor",
+      "openingDays": "Friday — Saturday",
+      "openingTime": "7:00 AM — 11:00 PM",
+      "hours": "Friday — Saturday · 7:00 AM — 11:00 PM",
+      "city": "Ramallah"
+    },
+    "footer": {
+      "backToTop": "Back to top",
+      "madeWithCare": "Made with care in Palestine",
+      "teamLogin": "Team login"
+    },
+    "home": {
+      "heroLabel": "Tomoor Café",
+      "heroImages": "Hero images",
+      "showImage": "Show image {{number}}",
+      "slides": {
+        "oneTitle": "Welcome to Tomoor",
+        "oneSubtitle": "Coffee · Dates · Stories",
+        "twoTitle": "Moments together",
+        "twoSubtitle": "A taste that stays",
+        "threeTitle": "Made with love",
+        "threeSubtitle": "Every day"
+      },
+      "categories": "Menu categories",
+      "nextCategory": "Next category",
+      "previousCategory": "Previous category",
+      "featuredSliders": "Featured slides",
+      "nextSlider": "Next slide",
+      "previousSlider": "Previous slide",
+      "storyEyebrow": "Our story",
+      "storyLead": "A warm Ramallah café bringing together carefully made coffee, selected dates, and fresh bakes—a simple place to pause and meet.",
+      "baristaAlt": "Tomoor Café barista grinding fresh coffee",
+      "established": "Est.",
+      "visit": "Visit",
+      "address": "Address",
+      "openingHours": "Opening hours",
+      "callAhead": "Call ahead",
+      "mapTitle": "Tomoor Café location",
+      "openMap": "Open map",
+      "openMapLabel": "Open Tomoor Café in Google Maps",
+      "contact": "Contact",
+      "stats": {
+        "label": "Tomoor Café highlights",
+        "customers": "Happy Customers",
+        "products": "Products",
+        "years": "Years of Experience"
+      }
+    }
+  },
+  "menu": {
+    "backHome": "Back to home",
+    "home": "Home",
+    "title": "Menu",
+    "subtitle": "Tomoor menu",
+    "searchLabel": "Search the menu",
+    "searchPlaceholder": "Search by name or category…",
+    "clearSearch": "Clear search",
+    "priceFilter": "Filter by price",
+    "priceFilters": {
+      "all": "All prices",
+      "under15": "₪15 or less",
+      "between15And20": "₪16–20",
+      "over20": "Over ₪20"
+    },
+    "findFavourite": "Find your favourite",
+    "categories": "Categories",
+    "categoryTabs": "Menu categories",
+    "preview": "Preview menu shown while the café data reconnects.",
+    "ourMenu": "Our menu",
+    "allMenu": "All menu",
+    "resultsFor": "Results for “{{query}}”",
+    "preparing": "Preparing the menu…",
+    "nothingFound": "Nothing found",
+    "tryAnother": "Try another name or category.",
+    "chooseAnother": "Choose another category.",
+    "backCategories": "Back to categories",
+    "availableSizes": "Available sizes and prices",
+    "small": "Small",
+    "medium": "Medium",
+    "large": "Large",
+    "showPrices": "Show prices",
+    "showDescription": "Show description",
+    "tapDetails": "Tap for details",
+    "tapPrices": "Tap to see prices",
+    "fallbackDescription": "Made with care and served fresh at Tomoor Café."
+  },
+  "admin": {
+    "panel": "Admin Panel",
+    "dashboard": "Dashboard",
+    "categories": "Categories",
+    "products": "Products",
+    "sliders": "Sliders",
+    "admins": "Admins",
+    "settings": "Settings",
+    "logout": "Logout",
+    "signOut": "Sign out",
+    "openNavigation": "Open navigation",
+    "closeNavigation": "Close navigation",
+    "login": {
+      "title": "Admin Panel",
+      "subtitle": "Sign in to manage your store",
+      "email": "Email",
+      "password": "Password",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "signIn": "Sign in",
+      "signingIn": "Signing in",
+      "checking": "Checking admin session",
+      "notice": "Authorized ETA Company administrators only.",
+      "error": "Unable to sign in. Please try again."
+    },
+    "common": {
+      "tryAgain": "Try again",
+      "active": "Active",
+      "hidden": "Hidden",
+      "pagination": "Pagination",
+      "previous": "Previous",
+      "next": "Next",
+      "pageOf": "Page {{page}} of {{total}}",
+      "uploadFailed": "Image upload failed",
+      "uploadPreview": "Upload preview",
+      "imagePreview": "Image preview",
+      "uploading": "Uploading…",
+      "replaceImage": "Replace image",
+      "chooseImage": "Choose image",
+      "imageHelp": "JPEG, PNG, WebP or GIF. Maximum 5 MB."
+    },
+    "forms": {
+      "common": {
+        "cancel": "Cancel",
+        "close": "Close",
+        "saving": "Saving…",
+        "sections": {
+          "status": "3. Status"
+        }
+      },
+      "fields": {
+        "englishName": "English name",
+        "arabicName": "Arabic name",
+        "englishTitle": "English title",
+        "arabicTitle": "Arabic title",
+        "category": "Category",
+        "englishDescription": "English description",
+        "arabicDescription": "Arabic description",
+        "price": "Price"
+      },
+      "product": {
+        "eyebrow": "Menu item",
+        "newTitle": "New product",
+        "editTitle": "Edit product",
+        "save": "Save product",
+        "chooseCategory": "Choose category",
+        "sections": {
+          "basic": "1. Basic Information",
+          "image": "2. Product Image",
+          "type": "3. Product Type",
+          "pricing": "4. Pricing",
+          "status": "5. Status"
+        },
+        "drink": "Drink",
+        "drinkHelp": "Small, medium and large pricing",
+        "food": "Food / Other",
+        "foodHelp": "One standard price",
+        "smallPrice": "Small price",
+        "mediumPrice": "Medium price",
+        "largePrice": "Large price",
+        "activeLabel": "Active on menu",
+        "activeHelp": "Customers can see and order this product.",
+        "validation": {
+          "required": "Category, both product names, and an image are required.",
+          "drinkPrice": "Add at least one size price greater than zero.",
+          "singlePrice": "Add a price greater than zero.",
+          "saveFailed": "Unable to save product"
+        }
+      },
+      "slider": {
+        "eyebrow": "Home page slide",
+        "newTitle": "New slider",
+        "editTitle": "Edit slider",
+        "save": "Save slider",
+        "sections": {
+          "info": "1. Slide Information",
+          "image": "2. Slider Image"
+        },
+        "displayOrder": "Display order",
+        "displayOrderHelp": "Each slider must use a unique order number.",
+        "activeLabel": "Active on home page",
+        "activeHelp": "Visitors can see this slider.",
+        "validation": {
+          "required": "Arabic title, English title, and an image are required.",
+          "displayOrder": "Display order must be a whole number of zero or greater.",
+          "saveFailed": "Unable to save slider"
+        }
+      },
+      "category": {
+        "eyebrow": "Category details",
+        "newTitle": "New category",
+        "editTitle": "Edit category",
+        "save": "Save category",
+        "sections": {
+          "basic": "1. Basic Information",
+          "image": "2. Category Image"
+        },
+        "activeLabel": "Active on menu",
+        "activeHelp": "Hiding this category also hides every product inside it.",
+        "validation": {
+          "required": "Arabic name, English name, and an image are required.",
+          "saveFailed": "Unable to save category"
+        }
+      },
+      "admin": {
+        "eyebrow": "New account",
+        "newTitle": "Add admin",
+        "save": "Add admin",
+        "adding": "Adding…",
+        "email": "Email",
+        "temporaryPassword": "Temporary password",
+        "passwordHelp": "At least 4 characters.",
+        "validation": {
+          "required": "Email and temporary password are required.",
+          "passwordLength": "Password must be at least 4 characters.",
+          "saveFailed": "Unable to add admin"
+        }
+      }
+    },
+    "pages": {
+      "dashboardEyebrow": "Overview",
+      "welcome": "Welcome Back, {{name}}",
+      "dashboardDescription": "Manage your store from one place.",
+      "dashboardError": "Unable to load dashboard",
+      "categoriesEyebrow": "Menu organization",
+      "categoriesDescription": "Organize your menu into clear, visual collections.",
+      "addCategory": "Add category",
+      "productsEyebrow": "Cafe menu",
+      "productsDescription": "Manage menu items, pricing, availability, and imagery.",
+      "addProduct": "Add product",
+      "slidersEyebrow": "Home page",
+      "slidersDescription": "Manage promotional slides, display order, visibility, and imagery.",
+      "addSlider": "Add slider",
+      "adminsEyebrow": "Access control",
+      "adminsDescription": "Manage who can access the ETA Company admin panel.",
+      "addAdmin": "Add admin",
+      "settingsEyebrow": "Preferences",
+      "settingsDescription": "Personalize how the ETA Company admin panel looks.",
+      "appearance": "Appearance",
+      "appearanceDescription": "Choose how the admin workspace looks on this device.",
+      "appearanceThemes": "Appearance themes",
+      "menuQr": "Menu QR",
+      "menuQrDescription": "Generate a small table card that links guests to the public menu.",
+      "menuQrPreview": "Printable preview",
+      "menuQrBrand": "Tomoor Café",
+      "tomoorMenuQrHeading": "Tomoor Menu",
+      "menuQrLogoAlt": "Tomoor Café logo",
+      "scanForMenu": "Scan for the menu",
+      "generatePrintMenuQr": "Generate / Print Menu QR",
+      "printMenuQr": "Print",
+      "light": "Light",
+      "lightDescription": "A bright, clean workspace",
+      "dark": "Dark",
+      "darkDescription": "A calm, low-light workspace",
+      "select": "Select"
+    },
+    "management": {
+      "searchCategories": "Search categories…",
+      "searchProducts": "Search products…",
+      "searchSliders": "Search sliders…",
+      "filterStatus": "Filter by status",
+      "filterCategory": "Filter by category",
+      "allStatuses": "All statuses",
+      "allCategories": "All categories",
+      "loadingCategories": "Loading categories…",
+      "loadingProducts": "Loading products…",
+      "loadingSliders": "Loading sliders…",
+      "loadingAdmins": "Loading admins…",
+      "noCategories": "No categories yet",
+      "noCategoriesMessage": "Create your first category to start building the company catalog.",
+      "noProducts": "No products yet",
+      "noProductsMessage": "Add your first drink or food item to the catalog.",
+      "categoryRequired": "Create a category before adding products.",
+      "noSliders": "No sliders yet",
+      "noSlidersMessage": "Add a promotional slide for the company home page.",
+      "noAdmins": "No admins found",
+      "noAdminsMessage": "Add an administrator to provide secure access.",
+      "category": "Category",
+      "product": "Product",
+      "slider": "Slider",
+      "created": "Created",
+      "status": "Status",
+      "actions": "Actions",
+      "pricing": "Pricing",
+      "order": "Order",
+      "edit": "Edit",
+      "hide": "Hide",
+      "activate": "Activate",
+      "delete": "Delete",
+      "unknown": "Unknown",
+      "singlePrice": "Single price",
+      "drinkSizes": "Drink sizes",
+      "currentAccount": "Current account",
+      "cannotDeleteSelf": "You cannot delete your own account",
+      "deleteAdmin": "Delete admin"
+    }
+  }
+}
