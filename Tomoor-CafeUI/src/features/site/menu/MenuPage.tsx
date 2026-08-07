@@ -79,7 +79,8 @@ export function MenuPage() {
       window.cancelAnimationFrame(frame)
       frame = window.requestAnimationFrame(() => {
         const categoryBottom = categoriesRef.current?.getBoundingClientRect().bottom ?? Number.POSITIVE_INFINITY
-        setShowCategoryReturn(categoryBottom < 90)
+        const footerTop = document.querySelector(".site-footer")?.getBoundingClientRect().top ?? Number.POSITIVE_INFINITY
+        setShowCategoryReturn(categoryBottom < 90 && footerTop > window.innerHeight - 8)
       })
     }
 
