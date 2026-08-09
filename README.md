@@ -143,11 +143,21 @@ Docker automatically:
 - Starts the API.
 - Starts the React development server.
 
-FastAPI automatically creates the database tables on startup.
+Database schema changes are applied explicitly with Alembic before using the API:
+
+```bash
+docker compose exec api alembic upgrade head
+```
+
+To load the starter catalog data, run:
+
+```bash
+docker compose exec api python -m app.seed
+```
 
 ## Create the first admin
 
-After the services are running, bootstrap the first admin interactively (the password is prompted and is not stored in shell history):
+After migrations have run, bootstrap the first admin interactively (the password is prompted and is not stored in shell history):
 
 ```bash
 docker compose exec api python -m app.bootstrap_admin

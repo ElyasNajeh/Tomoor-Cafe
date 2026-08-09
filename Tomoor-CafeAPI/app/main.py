@@ -4,7 +4,6 @@ from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
 from app.core.config import settings
-from app.db.init_db import init_db
 
 from app.features.admins.router import router as admins_router
 from app.features.auth.router import router as auth_router
@@ -26,11 +25,6 @@ app.add_middleware(
 upload_dir = Path(settings.UPLOAD_DIR)
 upload_dir.mkdir(parents=True, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=upload_dir), name="uploads")
-
-
-@app.on_event("startup")
-def startup():
-    init_db()
 
 
 app.include_router(categories_router)
