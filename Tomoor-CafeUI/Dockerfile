@@ -1,13 +1,24 @@
-FROM node:22-alpine
+FROM node:22-alpine AS build
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json package-lock.json ./
 
-RUN npm install
+RUN npm ci
 
 COPY . .
 
-EXPOSE 5173
+ARG VITE_API_URL=/api
+ARG VITE_PUBLIC_SITE_URL
 
-CMD ["npm", "run", "dev", "--", "--host"]
+ENV VITE_API_URL=${VITE_API_URL}
+ENV VITE_PUBLIC_SITE_URL=${VITE_PUBLIC_SITE_URL}
+
+RUN npm run build
+
+
+FROM caddy:2-alpine
+
+COPY --from=build /app/dist /srv
+
+COPY Caddyfile /etc/caddy/Caddyfile

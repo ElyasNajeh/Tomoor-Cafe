@@ -14,24 +14,8 @@ services:
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
 
-    ports:
-      - "5432:5432"
-
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
-
-  adminer:
-    image: adminer:latest
-    container_name: tomoor-adminer
-
-    restart: unless-stopped
-
-    ports:
-      - "8080:8080"
-
-    depends_on:
-      - postgres
 
 
   api:
@@ -45,11 +29,11 @@ services:
     env_file:
       - .env
 
-    ports:
-      - "8000:8000"
-
     depends_on:
       - postgres
+
+    expose:
+      - "8000"
 
     volumes:
       - uploads_data:/app/uploads
@@ -59,16 +43,24 @@ services:
   ui:
     build:
       context: ./Tomoor-CafeUI
+      args:
+        VITE_API_URL: /api
+        VITE_PUBLIC_SITE_URL: https://${DOMAIN}
 
     container_name: tomoor-ui
 
     restart: unless-stopped
 
     environment:
-      VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
+      DOMAIN: ${DOMAIN}
 
     ports:
-      - "5173:5173"
+      - "80:80"
+      - "443:443"
+
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
 
     depends_on:
       - api
@@ -77,3 +69,5 @@ services:
 volumes:
   postgres_data:
   uploads_data:
+  caddy_data:
+  caddy_config:
