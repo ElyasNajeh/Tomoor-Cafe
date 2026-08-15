@@ -1,3 +1,5 @@
+export type ProductType = "FOOD" | "DRINK"
+
 export type Product = {
   id: number
   category_id: number
@@ -6,11 +8,9 @@ export type Product = {
   description_ar: string | null
   description_en: string | null
   image: string
-  is_drink: boolean
   is_active: boolean
-  price: string | null
-  small_price: string | null
-  medium_price: string | null
-  large_price: string | null
   created_at: string
+  product_type: ProductType
+  food: { price: string } | null
+  drink: { small_price: string | null; medium_price: string | null; large_price: string | null } | null
 }

@@ -1,3 +1,5 @@
+export type ProductType = "FOOD" | "DRINK"
+
 export type Product = {
   id: number
   category_id: number
@@ -6,13 +8,11 @@ export type Product = {
   description_ar: string | null
   description_en: string | null
   image: string
-  is_drink: boolean
   is_active: boolean
-  price: string | null
-  small_price: string | null
-  medium_price: string | null
-  large_price: string | null
   created_at: string
+  product_type: ProductType
+  food: { price: string } | null
+  drink: { small_price: string | null; medium_price: string | null; large_price: string | null } | null
 }
 
 export type ProductPayload = {
@@ -22,12 +22,10 @@ export type ProductPayload = {
   description_ar: string | null
   description_en: string | null
   image: string
-  is_drink: boolean
   is_active: boolean
-  price: number | null
-  small_price: number | null
-  medium_price: number | null
-  large_price: number | null
+  product_type: ProductType
+  food: { price: number } | null
+  drink: { small_price: number | null; medium_price: number | null; large_price: number | null } | null
 }
 
 export type ProductFormValues = {
@@ -37,7 +35,7 @@ export type ProductFormValues = {
   description_ar: string
   description_en: string
   image: string
-  is_drink: boolean
+  product_type: ProductType
   is_active: boolean
   price: string
   small_price: string

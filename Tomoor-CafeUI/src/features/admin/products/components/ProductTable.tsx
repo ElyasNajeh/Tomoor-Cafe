@@ -98,15 +98,15 @@ export function ProductTable(props: ProductTableProps) {
 
 function ProductPrice({ product }: { product: Product }) {
   const { t } = useI18n()
-  if (!product.is_drink) {
-    return <span><small>{t("admin.management.singlePrice")}</small><strong>{formatMoney(product.price)}</strong></span>
+  if (product.product_type === "FOOD") {
+    return <span><small>{t("admin.management.singlePrice")}</small><strong>{formatMoney(product.food?.price ?? null)}</strong></span>
   }
 
   return (
     <span>
       <small>{t("admin.management.drinkSizes")}</small>
       <strong>
-        S {formatMoney(product.small_price)} · M {formatMoney(product.medium_price)} · L {formatMoney(product.large_price)}
+        S {formatMoney(product.drink?.small_price ?? null)} · M {formatMoney(product.drink?.medium_price ?? null)} · L {formatMoney(product.drink?.large_price ?? null)}
       </strong>
     </span>
   )

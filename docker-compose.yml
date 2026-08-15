@@ -3,7 +3,6 @@ services:
   postgres:
     image: postgres:17
     container_name: tomoor-postgres
-
     restart: unless-stopped
 
     env_file:
@@ -17,50 +16,60 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER} -d ${DATABASE_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+
+  adminer:
+    image: adminer:latest
+    container_name: tomoor-adminer
+    restart: unless-stopped
+
+    depends_on:
+      - postgres
+
+    ports:
+      - "8080:8080"
+
 
   api:
     build:
       context: ./Tomoor-CafeAPI
 
     container_name: tomoor-api
-
     restart: unless-stopped
 
     env_file:
       - .env
 
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
-    expose:
-      - "8000"
+    ports:
+      - "8000:8000"
 
     volumes:
       - uploads_data:/app/uploads
-      - ./Tomoor-CafeUI/src/assets:/app/seed-assets:ro
+      - ./Tomoor-CafeUI/src/assets/seed_images:/app/seed-assets/seed_images:ro
 
 
   ui:
     build:
       context: ./Tomoor-CafeUI
-      args:
-        VITE_API_URL: /api
-        VITE_PUBLIC_SITE_URL: https://${DOMAIN}
 
     container_name: tomoor-ui
-
     restart: unless-stopped
 
     environment:
-      DOMAIN: ${DOMAIN}
+      VITE_API_URL: http://localhost:8000
+      VITE_PUBLIC_SITE_URL: http://localhost:5173
 
     ports:
-      - "80:80"
-      - "443:443"
-
-    volumes:
-      - caddy_data:/data
-      - caddy_config:/config
+      - "5173:5173"
 
     depends_on:
       - api
@@ -69,5 +78,3 @@ services:
 volumes:
   postgres_data:
   uploads_data:
-  caddy_data:
-  caddy_config:

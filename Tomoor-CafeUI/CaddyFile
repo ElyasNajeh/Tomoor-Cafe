@@ -1,4 +1,4 @@
-{$DOMAIN} {
+http://localhost {
     encode zstd gzip
 
     handle_path /api/* {

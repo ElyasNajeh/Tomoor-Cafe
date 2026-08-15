@@ -39,13 +39,13 @@ export function ProductTypeFields({ form, onChange }: Omit<ProductFormFieldsProp
 
   return (
     <div className="choice-cards">
-      <label className={form.is_drink ? "selected" : ""}>
-        <input type="radio" checked={form.is_drink} onChange={() => onChange({ ...form, is_drink: true, price: "" })} />
+      <label className={form.product_type === "DRINK" ? "selected" : ""}>
+        <input type="radio" checked={form.product_type === "DRINK"} onChange={() => onChange({ ...form, product_type: "DRINK", price: "" })} />
         <Icon name="drink" />
         <span><strong>{t("admin.forms.product.drink")}</strong><small>{t("admin.forms.product.drinkHelp")}</small></span>
       </label>
-      <label className={!form.is_drink ? "selected" : ""}>
-        <input type="radio" checked={!form.is_drink} onChange={() => onChange({ ...form, is_drink: false, small_price: "", medium_price: "", large_price: "" })} />
+      <label className={form.product_type === "FOOD" ? "selected" : ""}>
+        <input type="radio" checked={form.product_type === "FOOD"} onChange={() => onChange({ ...form, product_type: "FOOD", small_price: "", medium_price: "", large_price: "" })} />
         <Icon name="food" />
         <span><strong>{t("admin.forms.product.food")}</strong><small>{t("admin.forms.product.foodHelp")}</small></span>
       </label>
@@ -56,7 +56,7 @@ export function ProductTypeFields({ form, onChange }: Omit<ProductFormFieldsProp
 export function ProductPriceFields({ form, onChange }: Omit<ProductFormFieldsProps, "categories">) {
   const { t } = useI18n()
 
-  if (!form.is_drink) {
+  if (form.product_type === "FOOD") {
     return (
       <label className="price-field">
         {t("admin.forms.fields.price")}

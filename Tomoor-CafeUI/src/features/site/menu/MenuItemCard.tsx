@@ -16,16 +16,16 @@ const sizes = [
 
 function ProductPrice({ product }: { product: Product }) {
   const { direction, language, t } = useI18n()
-  if (!product.is_drink) {
-    return <span className="menu-item-card__single-price"><strong>{product.price ?? "—"}</strong><span lang={language} dir={direction}>{t("common.currency")}</span></span>
+  if (product.product_type === "FOOD") {
+    return <span className="menu-item-card__single-price"><strong>{product.food?.price ?? "—"}</strong><span lang={language} dir={direction}>{t("common.currency")}</span></span>
   }
 
   const availableSizes = sizes.filter((size) => {
-    const price = product[size.key]
+    const price = product.drink?.[size.key]
     return price !== null && price !== undefined && String(price).trim() !== ""
   })
   if (!availableSizes.length) {
-    return <span className="menu-item-card__single-price"><strong>{product.price ?? "—"}</strong><span lang={language} dir={direction}>{t("common.currency")}</span></span>
+    return <span className="menu-item-card__single-price"><strong>—</strong><span lang={language} dir={direction}>{t("common.currency")}</span></span>
   }
 
   return (
@@ -34,7 +34,7 @@ function ProductPrice({ product }: { product: Product }) {
         <span className="menu-item-card__size" key={size.nameKey} title={t(size.nameKey)}>
           <img src={size.icon} alt="" />
           <span className="site-visually-hidden">{t(size.nameKey)}</span>
-          <strong>{String(product[size.key])}</strong><small lang={language} dir={direction}>{t("common.currency")}</small>
+          <strong>{String(product.drink?.[size.key])}</strong><small lang={language} dir={direction}>{t("common.currency")}</small>
         </span>
       ))}
     </span>

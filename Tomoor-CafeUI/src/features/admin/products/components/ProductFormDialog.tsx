@@ -23,18 +23,18 @@ function createInitialForm(product: Product | null, categories: Category[]): Pro
     description_ar: product?.description_ar ?? "",
     description_en: product?.description_en ?? "",
     image: product?.image ?? "",
-    is_drink: product?.is_drink ?? true,
+    product_type: product?.product_type ?? "DRINK",
     is_active: product?.is_active ?? true,
-    price: product?.price ?? "",
-    small_price: product?.small_price ?? "",
-    medium_price: product?.medium_price ?? "",
-    large_price: product?.large_price ?? "",
+    price: product?.food?.price ?? "",
+    small_price: product?.drink?.small_price ?? "",
+    medium_price: product?.drink?.medium_price ?? "",
+    large_price: product?.drink?.large_price ?? "",
   }
 }
 
 function toPayload(form: ProductFormValues): ProductPayload {
+  const isDrink = form.product_type === "DRINK"
   const numberOrNull = (value: string) => value === "" ? null : Number(value)
-
   return {
     category_id: Number(form.category_id),
     name_ar: form.name_ar,
@@ -42,12 +42,14 @@ function toPayload(form: ProductFormValues): ProductPayload {
     description_ar: form.description_ar || null,
     description_en: form.description_en || null,
     image: form.image,
-    is_drink: form.is_drink,
     is_active: form.is_active,
-    price: form.is_drink ? null : numberOrNull(form.price),
-    small_price: form.is_drink ? numberOrNull(form.small_price) : null,
-    medium_price: form.is_drink ? numberOrNull(form.medium_price) : null,
-    large_price: form.is_drink ? numberOrNull(form.large_price) : null,
+    product_type: form.product_type,
+    food: isDrink ? null : { price: Number(form.price) },
+    drink: isDrink ? {
+      small_price: numberOrNull(form.small_price),
+      medium_price: numberOrNull(form.medium_price),
+      large_price: numberOrNull(form.large_price),
+    } : null,
   }
 }
 
@@ -59,11 +61,11 @@ function validateForm(form: ProductFormValues, t: (key: string) => string) {
   const hasDrinkPrice = [form.small_price, form.medium_price, form.large_price]
     .some((value) => Number(value) > 0)
 
-  if (form.is_drink && !hasDrinkPrice) {
+  if (form.product_type === "DRINK" && !hasDrinkPrice) {
     return t("admin.forms.product.validation.drinkPrice")
   }
 
-  if (!form.is_drink && !(Number(form.price) > 0)) {
+  if (form.product_type === "FOOD" && !(Number(form.price) > 0)) {
     return t("admin.forms.product.validation.singlePrice")
   }
 

@@ -1,4 +1,4 @@
-FROM node:22-alpine AS build
+FROM node:22-alpine
 
 WORKDIR /app
 
@@ -8,17 +8,6 @@ RUN npm ci
 
 COPY . .
 
-ARG VITE_API_URL=/api
-ARG VITE_PUBLIC_SITE_URL
+EXPOSE 5173
 
-ENV VITE_API_URL=${VITE_API_URL}
-ENV VITE_PUBLIC_SITE_URL=${VITE_PUBLIC_SITE_URL}
-
-RUN npm run build
-
-
-FROM caddy:2-alpine
-
-COPY --from=build /app/dist /srv
-
-COPY Caddyfile /etc/caddy/Caddyfile
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

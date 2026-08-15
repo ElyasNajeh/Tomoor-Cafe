@@ -21,7 +21,10 @@ function parsePrice(value: unknown) {
 }
 
 function productPrices(product: Product) {
-  return [product.price, product.small_price, product.medium_price, product.large_price]
+  const prices = product.product_type === "FOOD"
+    ? [product.food?.price]
+    : [product.drink?.small_price, product.drink?.medium_price, product.drink?.large_price]
+  return prices
     .map(parsePrice)
     .filter((price): price is number => price !== null)
 }

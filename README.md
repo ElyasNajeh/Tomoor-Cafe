@@ -149,10 +149,15 @@ Database schema changes are applied explicitly with Alembic before using the API
 docker compose exec api alembic upgrade head
 ```
 
-To load the starter catalog data, run:
+On a fresh database, the API automatically installs the bundled catalog images
+and seeds categories, products, and sliders. If any product exists, startup leaves
+all catalog data unchanged.
+
+For local development only, seed the fixed development admin with
+`a@gmail.com` / `1234`:
 
 ```bash
-docker compose exec api python -m app.seed
+docker compose exec api python -m app.seed_dev_admin
 ```
 
 ## Create the first admin

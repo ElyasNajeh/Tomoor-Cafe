@@ -10,7 +10,7 @@ from app.db.base import Base
 
 from app.features.admins.model import Admin
 from app.features.categories.model import Category
-from app.features.products.model import Product, ProductImage
+from app.features.products.model import Drink, Food, Product
 from app.features.sliders.model import Slider
 
 # this is the Alembic Config object, which provides
