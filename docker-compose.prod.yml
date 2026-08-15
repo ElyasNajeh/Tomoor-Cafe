@@ -32,7 +32,7 @@ services:
       - postgres
 
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
 
 
   api:
@@ -50,7 +50,7 @@ services:
         condition: service_healthy
 
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
 
     volumes:
       - uploads_data:/app/uploads
@@ -59,16 +59,16 @@ services:
   ui:
     build:
       context: ./Tomoor-CafeUI
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+        VITE_PUBLIC_SITE_URL: ${VITE_PUBLIC_SITE_URL}
 
     container_name: tomoor-ui
     restart: unless-stopped
 
-    environment:
-      VITE_API_URL: http://localhost:8000
-      VITE_PUBLIC_SITE_URL: http://localhost:5173
-
     ports:
-      - "5173:5173"
+      - "127.0.0.1:5173:80"
 
     depends_on:
       - api
