@@ -54,7 +54,6 @@ services:
 
     volumes:
       - uploads_data:/app/uploads
-      - ./Tomoor-CafeUI/src/assets/seed_images:/app/seed-assets/seed_images:ro
 
 
   ui:
