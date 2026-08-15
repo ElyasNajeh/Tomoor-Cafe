@@ -1054,10 +1054,6 @@ html {
   text-transform: uppercase;
 }
 
-.site-footer__bottom a {
-  text-decoration: none;
-}
-
 /* Menu page */
 .site-visually-hidden {
   position: absolute;
@@ -2315,8 +2311,7 @@ html {
     line-height: 1.35;
   }
 
-  .site-footer__bottom span,
-  .site-footer__bottom a {
+  .site-footer__bottom span {
     min-width: 0;
   }
 

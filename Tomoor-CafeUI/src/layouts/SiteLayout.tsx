@@ -93,7 +93,6 @@ export function SiteLayout() {
         <div className="site-footer__bottom">
           <span>© {new Date().getFullYear()} Tomoor Café</span>
           <span lang={language} dir={direction}>{t("site.footer.madeWithCare")}</span>
-          <Link to="/admin/login" lang={language} dir={direction}>{t("site.footer.teamLogin")}</Link>
         </div>
       </footer>
     </div>
