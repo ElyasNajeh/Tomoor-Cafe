@@ -39,8 +39,9 @@
       "heroLabel": "مقهى تمور",
       "heroImages": "صور الواجهة",
       "showImage": "عرض الصورة {{number}}",
+      "viewMenu": "شوف المنيو",
       "slides": {
-        "oneTitle": "أهلاً وسهلاً في تمور",
+        "oneTitle": "أهلاً في تمور",
         "oneSubtitle": "قهوة · تمر · حكاية",
         "twoTitle": "لحظات بتجمعنا",
         "twoSubtitle": "مذاق بضل بالبال",

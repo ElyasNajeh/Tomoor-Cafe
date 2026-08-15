@@ -65,14 +65,14 @@ export function MenuItemCard({ product, index }: { product: Product; index: numb
           <span className="menu-item-card__body">
             <span className="menu-item-card__names"><strong lang={name.primaryLanguage}>{name.primary}</strong><span lang={name.secondaryLanguage}>{name.secondary}</span></span>
             <ProductPrice product={product} />
-            <small className="menu-item-card__tap"><span lang={language} dir={direction}>{t("menu.tapDetails")}</span><span className="directional-arrow" aria-hidden="true">↗</span></small>
+            <small className="menu-item-card__tap"><span lang={language} dir={direction}>{t("menu.tapDetails")}</span></small>
           </span>
         </span>
         <span className="menu-item-card__face menu-item-card__back" aria-hidden={!isFlipped}>
           <span className="menu-item-card__back-heading"><strong lang={name.primaryLanguage}>{name.primary}</strong><span lang={name.secondaryLanguage}>{name.secondary}</span></span>
           <span className="menu-item-card__description" lang={primaryDescriptionLanguage}>{primaryDescription}</span>
           {description.secondary && <span className="menu-item-card__description menu-item-card__description--secondary" lang={description.secondaryLanguage}>{description.secondary}</span>}
-          <small className="menu-item-card__tap"><span lang={language} dir={direction}>{t("menu.tapPrices")}</span><span className="directional-arrow" aria-hidden="true">↙</span></small>
+          <small className="menu-item-card__tap"><span lang={language} dir={direction}>{t("menu.tapPrices")}</span></small>
         </span>
       </span>
     </button>
