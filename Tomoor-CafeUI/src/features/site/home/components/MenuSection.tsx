@@ -99,6 +99,7 @@ export function MenuSection({ sliders }: { sliders: Slider[] }) {
               key={slide.image}
             />
           ))}
+          <Link className="home-hero__menu-button" to="/menu" lang={language} dir={direction}>{t("site.home.viewMenu")}</Link>
         </div>
       </div>
 

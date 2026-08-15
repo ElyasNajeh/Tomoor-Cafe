@@ -347,11 +347,45 @@ html {
   letter-spacing: -0.045em;
 }
 
+.home-hero__menu-button {
+  display: none;
+  width: fit-content;
+  margin-inline-start: 10px;
+  padding: 9px 22px;
+  border: 1px solid rgba(255, 243, 220, 0.7);
+  border-radius: 999px;
+  background: #6f4934;
+  color: #fff3dc;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.4;
+  text-decoration: none;
+  box-shadow: 0 7px 20px rgba(58, 29, 17, 0.38), 0 0 0 rgba(255, 226, 174, 0);
+  transition: transform 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+}
+
+.home-hero__menu-button:hover,
+.home-hero__menu-button:focus-visible {
+  background: #835b42;
+  box-shadow: 0 10px 26px rgba(58, 29, 17, 0.5), 0 0 18px rgba(255, 226, 174, 0.28);
+  transform: translateY(-2px) scale(1.04);
+}
+
+.home-hero__menu-button:focus-visible {
+  outline: 2px solid #fff3dc;
+  outline-offset: 3px;
+}
+
+.home-hero__menu-button:active {
+  transform: scale(0.98);
+}
+
 .home-hero__dots {
   position: absolute;
   inset-inline-start: max(7vw, calc((100vw - 1380px) / 2));
   bottom: calc(var(--category-overlap) + 31px);
   display: flex;
+  align-items: center;
   gap: 8px;
 }
 
@@ -369,6 +403,12 @@ html {
 .home-hero__dots button.is-active {
   width: 42px;
   background: #fff;
+}
+
+@media (min-width: 761px) {
+  .home-hero__dots {
+    bottom: calc(var(--category-overlap) + clamp(8px, 1.5vw, 22px));
+  }
 }
 
 .home-category-dock {
@@ -2093,6 +2133,13 @@ html {
 
   .home-hero__content h1 {
     font-size: clamp(42px, 12vw, 65px);
+  }
+
+  .home-hero__menu-button {
+    display: block;
+    margin-inline-start: 6px;
+    padding: 8px 17px;
+    font-size: 14px;
   }
 
   .home-hero__dots {

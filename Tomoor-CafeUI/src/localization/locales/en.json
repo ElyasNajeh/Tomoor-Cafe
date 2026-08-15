@@ -39,6 +39,7 @@
       "heroLabel": "Tomoor Café",
       "heroImages": "Hero images",
       "showImage": "Show image {{number}}",
+      "viewMenu": "View Menu",
       "slides": {
         "oneTitle": "Welcome to Tomoor",
         "oneSubtitle": "Coffee · Dates · Stories",
