@@ -46,8 +46,6 @@ export function MenuItemCard({ product, index }: { product: Product; index: numb
   const { direction, language, t } = useI18n()
   const name = localizedPair(product.name_en, product.name_ar, language)
   const description = localizedOptional(product.description_en, product.description_ar, language)
-  const primaryDescription = description.primary || t("menu.fallbackDescription")
-  const primaryDescriptionLanguage = description.primary ? description.primaryLanguage : language
 
   return (
     <button
@@ -70,7 +68,7 @@ export function MenuItemCard({ product, index }: { product: Product; index: numb
         </span>
         <span className="menu-item-card__face menu-item-card__back" aria-hidden={!isFlipped}>
           <span className="menu-item-card__back-heading"><strong lang={name.primaryLanguage}>{name.primary}</strong><span lang={name.secondaryLanguage}>{name.secondary}</span></span>
-          <span className="menu-item-card__description" lang={primaryDescriptionLanguage}>{primaryDescription}</span>
+          {description.primary && <span className="menu-item-card__description" lang={description.primaryLanguage}>{description.primary}</span>}
           {description.secondary && <span className="menu-item-card__description menu-item-card__description--secondary" lang={description.secondaryLanguage}>{description.secondary}</span>}
           <small className="menu-item-card__tap"><span lang={language} dir={direction}>{t("menu.tapPrices")}</span></small>
         </span>

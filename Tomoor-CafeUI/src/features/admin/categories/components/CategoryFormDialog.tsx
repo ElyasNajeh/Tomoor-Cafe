@@ -45,7 +45,7 @@ export function CategoryFormDialog({ category, onClose, onSave }: CategoryFormDi
       await onSave(category, form)
       onClose()
     } catch (caught) {
-      setFormError(caught instanceof ApiError ? caught.message : t("admin.forms.category.validation.saveFailed"))
+      setFormError(language === "en" && caught instanceof ApiError ? caught.message : t("admin.forms.category.validation.saveFailed"))
     } finally {
       setSaving(false)
     }

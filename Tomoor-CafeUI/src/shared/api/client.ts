@@ -51,6 +51,7 @@ async function rawRequest(
     ...options,
 
     credentials: "include",
+    cache: "no-store",
 
     headers: createHeaders(options),
   })

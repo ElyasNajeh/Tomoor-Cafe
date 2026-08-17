@@ -4,12 +4,14 @@ import { useFeedback } from "@/shared/feedback/FeedbackProvider"
 import { queryKeys } from "@/shared/query/queryClient"
 import { CategoriesApi } from "../categories.api"
 import type { Category, CategoryPayload } from "../categories.types"
+import { useI18n } from "@/localization/useI18n"
 
 const PAGE_SIZE = 8
 const LIST_LIMIT = 100
 
 export function useCategories() {
   const { toast, confirm } = useFeedback()
+  const { t, language } = useI18n()
   const queryClient = useQueryClient()
   const [search, setSearchValue] = useState("")
   const [statusFilter, setStatusFilterValue] = useState("")
@@ -32,8 +34,8 @@ export function useCategories() {
       : CategoriesApi.create(payload),
     onSuccess: async (_, { category, payload }) => {
       toast.success(
-        category ? "Category updated" : "Category created",
-        `${payload.name_en} is ready to use.`,
+        t(category ? "admin.feedback.category.updated" : "admin.feedback.category.created"),
+        t("admin.feedback.category.savedMessage", { name: language === "ar" ? payload.name_ar : payload.name_en }),
       )
 
       const invalidations = [
@@ -57,7 +59,7 @@ export function useCategories() {
   const deleteMutation = useMutation({
     mutationFn: (category: Category) => CategoriesApi.delete(category.id),
     onSuccess: async (_, category) => {
-      toast.success("Category deleted", `${category.name_en} was removed.`)
+      toast.success(t("admin.feedback.category.deleted"), t("admin.feedback.category.deletedMessage", { name: language === "ar" ? category.name_ar : category.name_en }))
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.categories }),
         queryClient.invalidateQueries({ queryKey: queryKeys.dashboardStats }),
@@ -69,10 +71,10 @@ export function useCategories() {
     mutationFn: (category: Category) => CategoriesApi.toggle(category.id),
     onSuccess: async (_, category) => {
       toast.success(
-        category.is_active ? "Category hidden" : "Category activated",
+        t(category.is_active ? "admin.feedback.category.hidden" : "admin.feedback.category.activated"),
         category.is_active
-          ? `${category.name_en} and all of its products are now hidden from the menu.`
-          : `${category.name_en} is now visible. Its products remain hidden until you activate them.`,
+          ? t("admin.feedback.category.hiddenMessage", { name: language === "ar" ? category.name_ar : category.name_en })
+          : t("admin.feedback.category.activatedMessage", { name: language === "ar" ? category.name_ar : category.name_en }),
       )
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.categories }),
@@ -116,9 +118,9 @@ export function useCategories() {
 
   async function deleteCategory(category: Category) {
     const confirmed = await confirm({
-      title: "Delete category?",
-      message: `Delete ${category.name_en}? Categories used by products cannot be deleted.`,
-      confirmLabel: "Delete category",
+      title: t("admin.feedback.category.deleteTitle"),
+      message: t("admin.feedback.category.deleteMessage", { name: language === "ar" ? category.name_ar : category.name_en }),
+      confirmLabel: t("admin.feedback.category.deleteConfirm"),
       variant: "danger",
     })
 
@@ -128,10 +130,10 @@ export function useCategories() {
 
     try {
       await deleteMutation.mutateAsync(category)
-    } catch (caught) {
+    } catch {
       toast.error(
-        "Could not delete category",
-        caught instanceof Error ? caught.message : undefined,
+        t("admin.feedback.category.deleteError"),
+        t("admin.feedback.requestFailed"),
       )
     }
   }
@@ -139,19 +141,15 @@ export function useCategories() {
   async function toggleCategory(category: Category) {
     try {
       await toggleMutation.mutateAsync(category)
-    } catch (caught) {
+    } catch {
       toast.error(
-        "Status update failed",
-        caught instanceof Error ? caught.message : undefined,
+        t("admin.feedback.statusError"),
+        t("admin.feedback.requestFailed"),
       )
     }
   }
 
-  const error = categoriesQuery.error instanceof Error
-    ? categoriesQuery.error.message
-    : categoriesQuery.error
-      ? "Unable to load categories"
-      : ""
+  const error = categoriesQuery.error ? t("admin.feedback.category.loadError") : ""
 
   return {
     items,

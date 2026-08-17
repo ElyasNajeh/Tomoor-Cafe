@@ -1,11 +1,8 @@
-import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client"
+import { QueryClientProvider } from "@tanstack/react-query"
 import { RouterProvider } from "react-router-dom"
 
 import { FeedbackProvider } from "@/shared/feedback/FeedbackProvider"
-import {
-  queryClient,
-  queryPersistOptions,
-} from "@/shared/query/queryClient"
+import { queryClient } from "@/shared/query/queryClient"
 import { RequestProvider } from "@/shared/request/RequestProvider"
 import { I18nProvider } from "@/localization/I18nProvider"
 import { router } from "./router"
@@ -13,16 +10,13 @@ import { router } from "./router"
 function App() {
   return (
     <I18nProvider>
-      <PersistQueryClientProvider
-        client={queryClient}
-        persistOptions={queryPersistOptions}
-      >
+      <QueryClientProvider client={queryClient}>
         <FeedbackProvider>
           <RequestProvider>
             <RouterProvider router={router} />
           </RequestProvider>
         </FeedbackProvider>
-      </PersistQueryClientProvider>
+      </QueryClientProvider>
     </I18nProvider>
   )
 }

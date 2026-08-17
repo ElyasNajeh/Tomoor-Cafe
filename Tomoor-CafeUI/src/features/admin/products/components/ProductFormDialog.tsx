@@ -94,7 +94,7 @@ export function ProductFormDialog(props: ProductFormDialogProps) {
       await props.onSave(props.product, toPayload(form))
       props.onClose()
     } catch (caught) {
-      setFormError(caught instanceof ApiError ? caught.message : t("admin.forms.product.validation.saveFailed"))
+      setFormError(language === "en" && caught instanceof ApiError ? caught.message : t("admin.forms.product.validation.saveFailed"))
     } finally {
       setSaving(false)
     }

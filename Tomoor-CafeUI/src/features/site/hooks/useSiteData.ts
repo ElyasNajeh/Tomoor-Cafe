@@ -3,7 +3,6 @@ import { categoryApi } from "@/entities/category/category.api"
 import { productApi } from "@/entities/product/product.api"
 import { sliderApi } from "@/entities/slider/slider.api"
 import { queryKeys } from "@/shared/query/queryClient"
-import { fallbackCategories, fallbackProducts } from "../siteContent"
 
 const SITE_LIST_LIMIT = 100
 
@@ -32,14 +31,10 @@ export function useSiteData() {
       .sort((first, second) => first.display_order - second.display_order),
   })
 
-  const liveCategories = categoriesQuery.data?.items ?? []
-  const liveProducts = productsQuery.data?.items ?? []
-
   return {
-    categories: liveCategories.length ? liveCategories : fallbackCategories,
-    products: liveProducts.length ? liveProducts : fallbackProducts,
+    categories: categoriesQuery.data?.items ?? [],
+    products: productsQuery.data?.items ?? [],
     sliders: slidersQuery.data ?? [],
     isLoading: categoriesQuery.isLoading || productsQuery.isLoading,
-    isUsingPreviewData: Boolean(categoriesQuery.isError || productsQuery.isError),
   }
 }

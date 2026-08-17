@@ -15,16 +15,6 @@ const heroSlides = [
   { image: baristaImage, titleKey: "site.home.slides.threeTitle", subtitleKey: "site.home.slides.threeSubtitle", position: "center center" },
 ] as const
 
-const fallbackSliderCards = heroSlides.map((slide, index) => ({
-  id: -index - 1,
-  title_en: `Tomoor Café ${index + 1}`,
-  title_ar: `مقهى تمور ${index + 1}`,
-  display_order: index,
-  is_active: true,
-  image: slide.image,
-  created_at: "",
-})) satisfies Slider[]
-
 export function MenuSection({ sliders }: { sliders: Slider[] }) {
   const [slideIndex, setSlideIndex] = useState(0)
   const [activeSlider, setActiveSlider] = useState(0)
@@ -32,9 +22,7 @@ export function MenuSection({ sliders }: { sliders: Slider[] }) {
   const carouselRef = useRef<HTMLDivElement | null>(null)
   const sliderRefs = useRef<Array<HTMLAnchorElement | null>>([])
   const { direction, language, t } = useI18n()
-  const sliderCards = sliders.length
-    ? [...sliders].sort((first, second) => first.display_order - second.display_order)
-    : fallbackSliderCards
+  const sliderCards = [...sliders].sort((first, second) => first.display_order - second.display_order)
 
   useEffect(() => {
     if (heroPaused || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
@@ -103,7 +91,7 @@ export function MenuSection({ sliders }: { sliders: Slider[] }) {
         </div>
       </div>
 
-      <div className="home-category-dock" aria-label={t("site.home.featuredSliders")}>
+      {sliderCards.length > 0 && <div className="home-category-dock" aria-label={t("site.home.featuredSliders")}>
         <button
           className="home-category-nav home-category-nav--next"
           type="button"
@@ -144,7 +132,7 @@ export function MenuSection({ sliders }: { sliders: Slider[] }) {
         >
           <span className="directional-arrow">←</span>
         </button>
-      </div>
+      </div>}
     </section>
   )
 }

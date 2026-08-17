@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react"
 import { Icon } from "@/shared/components/Icon"
+import { useI18n } from "@/localization/useI18n"
 
 type ToastType = "success" | "error" | "info"
 
@@ -41,6 +42,7 @@ type FeedbackValue = {
 const FeedbackContext = createContext<FeedbackValue | undefined>(undefined)
 
 export function FeedbackProvider({ children }: { children: ReactNode }) {
+  const { t } = useI18n()
   const [toasts, setToasts] = useState<Toast[]>([])
 
   const [confirmState, setConfirmState] = useState<ConfirmState>({
@@ -140,7 +142,7 @@ export function FeedbackProvider({ children }: { children: ReactNode }) {
 
             <button
               type="button"
-              aria-label="Dismiss notification"
+              aria-label={t("admin.feedback.dismissNotification")}
               onClick={() =>
                 setToasts((items) =>
                   items.filter(({ id }) => id !== item.id),
@@ -188,7 +190,7 @@ export function FeedbackProvider({ children }: { children: ReactNode }) {
                 className="button button--ghost"
                 onClick={() => resolveConfirm(false)}
               >
-                Cancel
+                {t("admin.forms.common.cancel")}
               </button>
 
               <button
@@ -198,7 +200,7 @@ export function FeedbackProvider({ children }: { children: ReactNode }) {
                 }`}
                 onClick={() => resolveConfirm(true)}
               >
-                {confirmState.confirmLabel ?? "Confirm"}
+                {confirmState.confirmLabel ?? t("admin.feedback.confirm")}
               </button>
             </div>
           </div>

@@ -18,7 +18,7 @@ export function LoginPage() {
 
   const { login, isAuthenticated, isAuthReady } = useAuth()
   const navigate = useNavigate()
-  const { direction, t } = useI18n()
+  const { direction, t, language } = useI18n()
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -37,7 +37,7 @@ export function LoginPage() {
       navigate("/admin", { replace: true })
     } catch (caught) {
       setError(
-        caught instanceof ApiError
+        language === "en" && caught instanceof ApiError
           ? caught.message
           : t("admin.login.error")
       )
@@ -69,7 +69,7 @@ export function LoginPage() {
         <Link
           className="login-logo"
           to="/admin"
-          aria-label="ETA Company dashboard"
+          aria-label={t("admin.login.dashboardLabel")}
         >
           <img
             src={logo}

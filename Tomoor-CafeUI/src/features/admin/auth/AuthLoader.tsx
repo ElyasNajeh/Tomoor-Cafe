@@ -1,8 +1,12 @@
+import { useI18n } from "@/localization/useI18n"
+
 type AuthLoaderProps = { fullPage?: boolean; compact?: boolean; label?: string }
 
-export function AuthLoader({ fullPage = false, compact = false, label = "Loading" }: AuthLoaderProps) {
+export function AuthLoader({ fullPage = false, compact = false, label }: AuthLoaderProps) {
+  const { t } = useI18n()
+  const accessibleLabel = label ?? t("admin.common.loading")
   const loader = (
-    <span className={`auth-loader${compact ? " auth-loader--compact" : ""}`} role="status" aria-label={label}>
+    <span className={`auth-loader${compact ? " auth-loader--compact" : ""}`} role="status" aria-label={accessibleLabel}>
       {compact ? <span className="eta-loader-mini" aria-hidden="true" /> : (
         <svg className="eta-loader-svg" viewBox="0 0 140 140" aria-hidden="true">
           <defs>

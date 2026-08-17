@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react"
+import { useEffect, useRef, useState, type FormEvent } from "react"
 import { ApiError } from "@/shared/api/error"
 import { ImageUpload } from "@/shared/components/AdminComponents"
 import { Icon } from "@/shared/components/Icon"
@@ -8,15 +8,16 @@ import type { Slider, SliderFormValues, SliderPayload } from "../sliders.types"
 
 type SliderFormDialogProps = {
   slider: Slider | null
+  nextDisplayOrder: number | null
   onClose: () => void
   onSave: (slider: Slider | null, payload: SliderPayload, isActive: boolean) => Promise<void>
 }
 
-function createInitialForm(slider: Slider | null): SliderFormValues {
+function createInitialForm(slider: Slider | null, nextDisplayOrder: number | null): SliderFormValues {
   return {
     title_ar: slider?.title_ar ?? "",
     title_en: slider?.title_en ?? "",
-    display_order: slider ? String(slider.display_order) : "",
+    display_order: slider ? String(slider.display_order) : nextDisplayOrder === null ? "" : String(nextDisplayOrder),
     is_active: slider?.is_active ?? true,
     image: slider?.image ?? "",
   }
@@ -24,9 +25,17 @@ function createInitialForm(slider: Slider | null): SliderFormValues {
 
 export function SliderFormDialog(props: SliderFormDialogProps) {
   const { t, direction, language } = useI18n()
-  const [form, setForm] = useState(() => createInitialForm(props.slider))
+  const [form, setForm] = useState(() => createInitialForm(props.slider, props.nextDisplayOrder))
+  const defaultOrderApplied = useRef(props.nextDisplayOrder !== null)
   const [saving, setSaving] = useState(false)
   const [formError, setFormError] = useState("")
+
+  useEffect(() => {
+    if (props.slider || defaultOrderApplied.current || props.nextDisplayOrder === null) return
+
+    setForm((current) => ({ ...current, display_order: String(props.nextDisplayOrder) }))
+    defaultOrderApplied.current = true
+  }, [props.nextDisplayOrder, props.slider])
 
   async function handleSave(event: FormEvent) {
     event.preventDefault()
@@ -54,7 +63,7 @@ export function SliderFormDialog(props: SliderFormDialogProps) {
       }, form.is_active)
       props.onClose()
     } catch (caught) {
-      setFormError(caught instanceof ApiError ? caught.message : t("admin.forms.slider.validation.saveFailed"))
+      setFormError(language === "en" && caught instanceof ApiError ? caught.message : t("admin.forms.slider.validation.saveFailed"))
     } finally {
       setSaving(false)
     }

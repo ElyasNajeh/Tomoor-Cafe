@@ -4,11 +4,13 @@ import { useFeedback } from "@/shared/feedback/FeedbackProvider"
 import { queryKeys } from "@/shared/query/queryClient"
 import { SlidersApi } from "../sliders.api"
 import type { Slider, SliderPayload } from "../sliders.types"
+import { useI18n } from "@/localization/useI18n"
 
 const PAGE_SIZE = 10
 
 export function useSliders() {
   const { toast, confirm } = useFeedback()
+  const { t, language } = useI18n()
   const queryClient = useQueryClient()
   const [search, setSearchValue] = useState("")
   const [statusFilter, setStatusFilterValue] = useState("")
@@ -44,8 +46,8 @@ export function useSliders() {
     },
     onSuccess: async (_, { slider, payload }) => {
       toast.success(
-        slider ? "Slider updated" : "Slider created",
-        `${payload.title_en} was saved successfully.`,
+        t(slider ? "admin.feedback.slider.updated" : "admin.feedback.slider.created"),
+        t("admin.feedback.slider.savedMessage", { name: language === "ar" ? payload.title_ar : payload.title_en }),
       )
 
       const invalidations = [
@@ -65,7 +67,7 @@ export function useSliders() {
   const deleteMutation = useMutation({
     mutationFn: (slider: Slider) => SlidersApi.delete(slider.id),
     onSuccess: async (_, slider) => {
-      toast.success("Slider deleted", `${slider.title_en} was removed.`)
+      toast.success(t("admin.feedback.slider.deleted"), t("admin.feedback.slider.deletedMessage", { name: language === "ar" ? slider.title_ar : slider.title_en }))
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.sliders }),
         queryClient.invalidateQueries({ queryKey: queryKeys.dashboardStats }),
@@ -77,8 +79,8 @@ export function useSliders() {
     mutationFn: (slider: Slider) => SlidersApi.toggle(slider.id),
     onSuccess: async (_, slider) => {
       toast.success(
-        slider.is_active ? "Slider hidden" : "Slider activated",
-        `${slider.title_en} is now ${slider.is_active ? "hidden from" : "visible on"} the home page.`,
+        t(slider.is_active ? "admin.feedback.slider.hidden" : "admin.feedback.slider.activated"),
+        t(slider.is_active ? "admin.feedback.slider.hiddenMessage" : "admin.feedback.slider.activatedMessage", { name: language === "ar" ? slider.title_ar : slider.title_en }),
       )
       await queryClient.invalidateQueries({ queryKey: queryKeys.sliders })
     },
@@ -102,6 +104,12 @@ export function useSliders() {
   const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE))
   const currentPage = Math.min(page, totalPages)
   const items = filteredItems.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+  const nextDisplayOrder = slidersQuery.data
+    ? slidersQuery.data.reduce(
+      (highestOrder, slider) => Math.max(highestOrder, slider.display_order),
+      -1,
+    ) + 1
+    : null
 
   function updateFilter(setter: (value: string) => void, value: string) {
     setter(value)
@@ -118,9 +126,9 @@ export function useSliders() {
 
   async function deleteSlider(slider: Slider) {
     const confirmed = await confirm({
-      title: "Delete slider?",
-      message: `Permanently delete ${slider.title_en}? This cannot be undone.`,
-      confirmLabel: "Delete slider",
+      title: t("admin.feedback.slider.deleteTitle"),
+      message: t("admin.feedback.slider.deleteMessage", { name: language === "ar" ? slider.title_ar : slider.title_en }),
+      confirmLabel: t("admin.feedback.slider.deleteConfirm"),
       variant: "danger",
     })
 
@@ -130,24 +138,20 @@ export function useSliders() {
 
     try {
       await deleteMutation.mutateAsync(slider)
-    } catch (caught) {
-      toast.error("Could not delete slider", caught instanceof Error ? caught.message : undefined)
+    } catch {
+      toast.error(t("admin.feedback.slider.deleteError"), t("admin.feedback.requestFailed"))
     }
   }
 
   async function toggleSlider(slider: Slider) {
     try {
       await toggleMutation.mutateAsync(slider)
-    } catch (caught) {
-      toast.error("Status update failed", caught instanceof Error ? caught.message : undefined)
+    } catch {
+      toast.error(t("admin.feedback.statusError"), t("admin.feedback.requestFailed"))
     }
   }
 
-  const error = slidersQuery.error instanceof Error
-    ? slidersQuery.error.message
-    : slidersQuery.error
-      ? "Unable to load sliders"
-      : ""
+  const error = slidersQuery.error ? t("admin.feedback.slider.loadError") : ""
 
   return {
     items,
@@ -158,6 +162,7 @@ export function useSliders() {
     page: currentPage,
     totalPages,
     totalItems,
+    nextDisplayOrder,
     setSearch: (value: string) => updateFilter(setSearchValue, value),
     setStatusFilter: (value: string) => updateFilter(setStatusFilterValue, value),
     setPage,

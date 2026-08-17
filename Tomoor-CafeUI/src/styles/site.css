@@ -764,26 +764,26 @@ html {
 
 .site-location__details > div {
   display: grid;
-  grid-template-columns: 38px 1fr;
+  grid-template-columns: 57px 1fr;
   align-items: center;
-  gap: 14px;
-  padding: 15px 0;
+  gap: 21px;
+  padding: 23px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .site-location__details > div > svg {
-  width: 22px;
+  width: 33px;
   color: #e2b678;
 }
 
 .site-location__details span {
   display: grid;
-  gap: 4px;
+  gap: 6px;
 }
 
 .site-location__details small {
   color: rgba(255, 255, 255, 0.62);
-  font-size: 10px;
+  font-size: 15px;
   font-weight: 800;
   text-transform: uppercase;
 }
@@ -791,14 +791,14 @@ html {
 .site-location__details strong,
 .site-location__details a {
   color: #fff;
-  font-size: 16px;
+  font-size: 24px;
   font-weight: 700;
   text-decoration: none;
 }
 
 .site-location__details em {
   color: rgba(255, 255, 255, 0.7);
-  font-size: 11px;
+  font-size: 16.5px;
   font-style: normal;
   font-weight: 600;
 }
@@ -965,7 +965,7 @@ html {
 }
 
 .site-stat {
-  min-height: 126px;
+  min-height: 189px;
   display: grid;
   place-items: center;
   align-content: center;
@@ -976,21 +976,21 @@ html {
 }
 
 .site-stat img {
-  width: 38px;
-  height: 38px;
+  width: 57px;
+  height: 57px;
   object-fit: contain;
 }
 
 .site-stat strong {
   color: var(--site-accent);
-  font-size: clamp(28px, 3vw, 42px);
+  font-size: clamp(42px, 4.5vw, 63px);
   font-weight: 800;
   line-height: 1;
 }
 
 .site-stat span {
   color: var(--site-muted);
-  font-size: 12px;
+  font-size: 18px;
   font-weight: 800;
   text-transform: uppercase;
 }
@@ -1092,16 +1092,16 @@ html {
   inset-inline-start: 0;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 7.5px;
   color: var(--site-muted);
-  font-size: 10px;
+  font-size: 15px;
   font-weight: 700;
   text-decoration: none;
   transition: color 180ms ease, transform 180ms ease;
 }
 
 .full-menu-page__header a > .directional-arrow {
-  font-size: 16px;
+  font-size: 24px;
   line-height: 1;
 }
 
@@ -1118,7 +1118,7 @@ html {
 .full-menu-content__intro > small,
 .full-menu-results-heading small {
   color: #a0623f;
-  font-size: 8px;
+  font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -1134,10 +1134,10 @@ html {
 }
 
 .full-menu-page__title > span {
-  margin-top: 5px;
+  margin-top: 7.5px;
   color: var(--site-accent);
   font-family: Arial, sans-serif;
-  font-size: 11px;
+  font-size: 16.5px;
   font-weight: 700;
 }
 
@@ -1146,7 +1146,7 @@ html {
   width: 100%;
   max-width: 680px;
   display: grid;
-  grid-template-columns: 20px minmax(0, 1fr) auto auto;
+  grid-template-columns: 20px minmax(0, 1fr) auto auto auto;
   align-items: center;
   gap: 9px;
   margin-top: 22px;
@@ -1192,7 +1192,7 @@ html {
   color: var(--site-ink);
   background: transparent;
   font: inherit;
-  font-size: 14px;
+  font-size: 21px;
   appearance: none;
 }
 
@@ -1232,6 +1232,40 @@ html {
 
 .full-menu-search__filter svg {
   width: 17px;
+}
+
+.full-menu-search__clear-price-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: auto !important;
+  max-width: 118px;
+  height: 30px;
+  padding: 0 8px !important;
+  overflow: hidden;
+  border-radius: 999px !important;
+  color: var(--site-accent) !important;
+  background: #f4ebe2 !important;
+  font-size: 11px !important;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.full-menu-search__clear-price-filter span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.full-menu-search__clear-price-filter b {
+  flex: 0 0 auto;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.full-menu-search__clear-price-filter:hover {
+  color: #fff !important;
+  background: var(--site-accent) !important;
 }
 
 .full-menu-price-filter,
@@ -1434,13 +1468,13 @@ html {
   min-width: 0;
   width: 100%;
   display: grid;
-  gap: 3px;
+  gap: 4.5px;
   line-height: 1.12;
 }
 
 .full-menu-category__copy strong {
   overflow: hidden;
-  font-size: 13.5px;
+  font-size: 20.25px;
   font-weight: 800;
   letter-spacing: 0.015em;
   line-height: 1.15;
@@ -1452,7 +1486,7 @@ html {
 .full-menu-category__copy small {
   overflow: hidden;
   color: #675b52;
-  font-size: 12.5px;
+  font-size: 18.75px;
   font-weight: 700;
   line-height: 1.3;
   text-overflow: ellipsis;
@@ -1505,7 +1539,7 @@ html {
 .full-menu-results-heading > span {
   flex: none;
   color: #8a8177;
-  font-size: 10px;
+  font-size: 15px;
   font-weight: 700;
 }
 
@@ -2373,7 +2407,7 @@ html {
   }
 
   .full-menu-category__copy strong {
-    font-size: 12.5px;
+    font-size: 18.75px;
   }
 
   .full-menu-grid {

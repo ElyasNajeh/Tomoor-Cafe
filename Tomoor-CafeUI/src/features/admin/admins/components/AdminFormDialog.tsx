@@ -49,7 +49,7 @@ export function AdminFormDialog({
       onClose()
     } catch (caught) {
       setFormError(
-        caught instanceof ApiError
+        language === "en" && caught instanceof ApiError
           ? caught.message
           : t("admin.forms.admin.validation.saveFailed"),
       )

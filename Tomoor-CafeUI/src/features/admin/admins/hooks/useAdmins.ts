@@ -3,9 +3,11 @@ import { useFeedback } from "@/shared/feedback/FeedbackProvider"
 import { queryKeys } from "@/shared/query/queryClient"
 import { AdminsApi } from "../admins.api"
 import type { Admin, AdminPayload } from "../admins.types"
+import { useI18n } from "@/localization/useI18n"
 
 export function useAdmins(currentAdminId: number | undefined) {
   const { toast, confirm } = useFeedback()
+  const { t } = useI18n()
   const queryClient = useQueryClient()
 
   const adminsQuery = useQuery({
@@ -16,7 +18,7 @@ export function useAdmins(currentAdminId: number | undefined) {
   const createMutation = useMutation({
     mutationFn: AdminsApi.create,
     onSuccess: async (_, payload) => {
-      toast.success("Admin added", `${payload.email} can now sign in.`)
+      toast.success(t("admin.feedback.admin.created"), t("admin.feedback.admin.createdMessage", { email: payload.email }))
       await queryClient.invalidateQueries({ queryKey: queryKeys.admins })
     },
   })
@@ -24,7 +26,7 @@ export function useAdmins(currentAdminId: number | undefined) {
   const deleteMutation = useMutation({
     mutationFn: (admin: Admin) => AdminsApi.delete(admin.id),
     onSuccess: async (_, admin) => {
-      toast.success("Admin deleted", `${admin.email} no longer has access.`)
+      toast.success(t("admin.feedback.admin.deleted"), t("admin.feedback.admin.deletedMessage", { email: admin.email }))
       await queryClient.invalidateQueries({ queryKey: queryKeys.admins })
     },
   })
@@ -39,9 +41,9 @@ export function useAdmins(currentAdminId: number | undefined) {
     }
 
     const confirmed = await confirm({
-      title: "Delete admin?",
-      message: `Remove access for ${admin.email}? They will no longer be able to sign in.`,
-      confirmLabel: "Delete admin",
+      title: t("admin.feedback.admin.deleteTitle"),
+      message: t("admin.feedback.admin.deleteMessage", { email: admin.email }),
+      confirmLabel: t("admin.feedback.admin.deleteConfirm"),
       variant: "danger",
     })
 
@@ -51,16 +53,12 @@ export function useAdmins(currentAdminId: number | undefined) {
 
     try {
       await deleteMutation.mutateAsync(admin)
-    } catch (caught) {
-      toast.error("Could not delete admin", caught instanceof Error ? caught.message : undefined)
+    } catch {
+      toast.error(t("admin.feedback.admin.deleteError"), t("admin.feedback.requestFailed"))
     }
   }
 
-  const error = adminsQuery.error instanceof Error
-    ? adminsQuery.error.message
-    : adminsQuery.error
-      ? "Unable to load admins"
-      : ""
+  const error = adminsQuery.error ? t("admin.feedback.admin.loadError") : ""
 
   return {
     items: adminsQuery.data ?? [],

@@ -4,6 +4,7 @@ import { CategoriesApi } from "@/features/admin/categories/categories.api"
 import { useFeedback } from "@/shared/feedback/FeedbackProvider"
 import { queryKeys } from "@/shared/query/queryClient"
 import { ProductsApi } from "../products.api"
+import { useI18n } from "@/localization/useI18n"
 import type { Product, ProductPayload } from "../products.types"
 
 const PAGE_SIZE = 10
@@ -11,6 +12,7 @@ const LIST_LIMIT = 100
 
 export function useProducts() {
   const { toast, confirm } = useFeedback()
+  const { t, language } = useI18n()
   const queryClient = useQueryClient()
   const [search, setSearchValue] = useState("")
   const [categoryFilter, setCategoryFilterValue] = useState("")
@@ -39,8 +41,8 @@ export function useProducts() {
       : ProductsApi.create(payload),
     onSuccess: async (_, { product, payload }) => {
       toast.success(
-        product ? "Product updated" : "Product created",
-        `${payload.name_en} was saved successfully.`,
+        t(product ? "admin.feedback.product.updated" : "admin.feedback.product.created"),
+        t("admin.feedback.product.savedMessage", { name: language === "ar" ? payload.name_ar : payload.name_en }),
       )
 
       const invalidations = [
@@ -60,7 +62,7 @@ export function useProducts() {
   const deleteMutation = useMutation({
     mutationFn: (product: Product) => ProductsApi.delete(product.id),
     onSuccess: async (_, product) => {
-      toast.success("Product deleted", `${product.name_en} was removed.`)
+      toast.success(t("admin.feedback.product.deleted"), t("admin.feedback.product.deletedMessage", { name: language === "ar" ? product.name_ar : product.name_en }))
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.products }),
         queryClient.invalidateQueries({ queryKey: queryKeys.dashboardStats }),
@@ -72,8 +74,8 @@ export function useProducts() {
     mutationFn: (product: Product) => ProductsApi.toggle(product.id),
     onSuccess: async (_, product) => {
       toast.success(
-        product.is_active ? "Product hidden" : "Product activated",
-        `${product.name_en} is now ${product.is_active ? "hidden from" : "visible on"} the menu.`,
+        t(product.is_active ? "admin.feedback.product.hidden" : "admin.feedback.product.activated"),
+        t(product.is_active ? "admin.feedback.product.hiddenMessage" : "admin.feedback.product.activatedMessage", { name: language === "ar" ? product.name_ar : product.name_en }),
       )
       await queryClient.invalidateQueries({ queryKey: queryKeys.products })
     },
@@ -118,9 +120,9 @@ export function useProducts() {
 
   async function deleteProduct(product: Product) {
     const confirmed = await confirm({
-      title: "Delete product?",
-      message: `Permanently delete ${product.name_en}? This cannot be undone.`,
-      confirmLabel: "Delete product",
+      title: t("admin.feedback.product.deleteTitle"),
+      message: t("admin.feedback.product.deleteMessage", { name: language === "ar" ? product.name_ar : product.name_en }),
+      confirmLabel: t("admin.feedback.product.deleteConfirm"),
       variant: "danger",
     })
 
@@ -130,25 +132,21 @@ export function useProducts() {
 
     try {
       await deleteMutation.mutateAsync(product)
-    } catch (caught) {
-      toast.error("Could not delete product", caught instanceof Error ? caught.message : undefined)
+    } catch {
+      toast.error(t("admin.feedback.product.deleteError"), t("admin.feedback.requestFailed"))
     }
   }
 
   async function toggleProduct(product: Product) {
     try {
       await toggleMutation.mutateAsync(product)
-    } catch (caught) {
-      toast.error("Status update failed", caught instanceof Error ? caught.message : undefined)
+    } catch {
+      toast.error(t("admin.feedback.statusError"), t("admin.feedback.requestFailed"))
     }
   }
 
   const errorValue = productsQuery.error ?? categoriesQuery.error
-  const error = errorValue instanceof Error
-    ? errorValue.message
-    : errorValue
-      ? "Unable to load products"
-      : ""
+  const error = errorValue ? t("admin.feedback.product.loadError") : ""
 
   return {
     items,

@@ -48,6 +48,7 @@ export function SlidersPage() {
         <SliderFormDialog
           key={editingSlider?.id ?? "new"}
           slider={editingSlider}
+          nextDisplayOrder={sliders.nextDisplayOrder}
           onClose={() => setEditingSlider(undefined)}
           onSave={sliders.saveSlider}
         />

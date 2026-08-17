@@ -82,8 +82,10 @@
     "searchPlaceholder": "Search by name or category…",
     "clearSearch": "Clear search",
     "priceFilter": "Filter by price",
+    "clearPriceFilter": "Clear price filter",
     "priceFilters": {
       "all": "All prices",
+      "under10": "₪10 or less",
       "under15": "₪15 or less",
       "between15And20": "₪16–20",
       "over20": "Over ₪20"
@@ -91,7 +93,6 @@
     "findFavourite": "Find your favourite",
     "categories": "Categories",
     "categoryTabs": "Menu categories",
-    "preview": "Preview menu shown while the café data reconnects.",
     "ourMenu": "Our menu",
     "allMenu": "All menu",
     "resultsFor": "Results for “{{query}}”",
@@ -107,8 +108,7 @@
     "showPrices": "Show prices",
     "showDescription": "Show description",
     "tapDetails": "Tap for details",
-    "tapPrices": "Tap to see prices",
-    "fallbackDescription": "Made with care and served fresh at Tomoor Café."
+    "tapPrices": "Tap to see prices"
   },
   "admin": {
     "panel": "Admin Panel",
@@ -132,11 +132,13 @@
       "signIn": "Sign in",
       "signingIn": "Signing in",
       "checking": "Checking admin session",
+      "dashboardLabel": "ETA Company dashboard",
       "notice": "Authorized ETA Company administrators only.",
       "error": "Unable to sign in. Please try again."
     },
     "common": {
       "tryAgain": "Try again",
+      "loading": "Loading",
       "active": "Active",
       "hidden": "Hidden",
       "pagination": "Pagination",
@@ -325,6 +327,71 @@
       "currentAccount": "Current account",
       "cannotDeleteSelf": "You cannot delete your own account",
       "deleteAdmin": "Delete admin"
+    },
+    "feedback": {
+      "dismissNotification": "Dismiss notification",
+      "confirm": "Confirm",
+      "requestFailed": "Please try again.",
+      "statusError": "Status update failed",
+      "product": {
+        "created": "Product created",
+        "updated": "Product updated",
+        "savedMessage": "{{name}} was saved successfully.",
+        "deleted": "Product deleted",
+        "deletedMessage": "{{name}} was removed.",
+        "hidden": "Product hidden",
+        "activated": "Product activated",
+        "hiddenMessage": "{{name}} is now hidden from the menu.",
+        "activatedMessage": "{{name}} is now visible on the menu.",
+        "deleteTitle": "Delete product?",
+        "deleteMessage": "Permanently delete {{name}}? This cannot be undone.",
+        "deleteConfirm": "Delete product",
+        "deleteError": "Could not delete product",
+        "loadError": "Unable to load products"
+      },
+      "category": {
+        "created": "Category created",
+        "updated": "Category updated",
+        "savedMessage": "{{name}} is ready to use.",
+        "deleted": "Category deleted",
+        "deletedMessage": "{{name}} was removed.",
+        "hidden": "Category hidden",
+        "activated": "Category activated",
+        "hiddenMessage": "{{name}} and all its products are now hidden from the menu.",
+        "activatedMessage": "{{name}} is now visible. Its products remain hidden until you activate them.",
+        "deleteTitle": "Delete category?",
+        "deleteMessage": "Delete {{name}}? Categories used by products cannot be deleted.",
+        "deleteConfirm": "Delete category",
+        "deleteError": "Could not delete category",
+        "loadError": "Unable to load categories"
+      },
+      "slider": {
+        "created": "Slider created",
+        "updated": "Slider updated",
+        "savedMessage": "{{name}} was saved successfully.",
+        "deleted": "Slider deleted",
+        "deletedMessage": "{{name}} was removed.",
+        "hidden": "Slider hidden",
+        "activated": "Slider activated",
+        "hiddenMessage": "{{name}} is now hidden from the home page.",
+        "activatedMessage": "{{name}} is now visible on the home page.",
+        "deleteTitle": "Delete slider?",
+        "deleteMessage": "Permanently delete {{name}}? This cannot be undone.",
+        "deleteConfirm": "Delete slider",
+        "deleteError": "Could not delete slider",
+        "loadError": "Unable to load sliders"
+      },
+      "admin": {
+        "created": "Admin added",
+        "createdMessage": "{{email}} can now sign in.",
+        "deleted": "Admin deleted",
+        "deletedMessage": "{{email}} no longer has access.",
+        "deleteTitle": "Delete admin?",
+        "deleteMessage": "Remove access for {{email}}? They will no longer be able to sign in.",
+        "deleteConfirm": "Delete admin",
+        "deleteError": "Could not delete admin",
+        "loadError": "Unable to load admins"
+      }
     }
   }
 }

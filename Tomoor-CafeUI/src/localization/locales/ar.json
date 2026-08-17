@@ -82,8 +82,10 @@
     "searchPlaceholder": "دوّر بالاسم أو القسم…",
     "clearSearch": "امسح البحث",
     "priceFilter": "فلترة حسب السعر",
+    "clearPriceFilter": "امسح فلتر السعر",
     "priceFilters": {
       "all": "كل الأسعار",
+      "under10": "₪10 أو أقل",
       "under15": "₪15 أو أقل",
       "between15And20": "₪16–20",
       "over20": "أكثر من ₪20"
@@ -91,7 +93,6 @@
     "findFavourite": "اختار اللي بتحبه",
     "categories": "الأقسام",
     "categoryTabs": "أقسام القائمة",
-    "preview": "بنعرض قائمة تجريبية لحد ما نرجع نتصل ببيانات المقهى.",
     "ourMenu": "قائمتنا",
     "allMenu": "القائمة كاملة",
     "resultsFor": "نتائج البحث عن «{{query}}»",
@@ -107,8 +108,7 @@
     "showPrices": "اعرض الأسعار",
     "showDescription": "اعرض الوصف",
     "tapDetails": "اضغط للتفاصيل",
-    "tapPrices": "اضغط لعرض الأسعار",
-    "fallbackDescription": "بنحضّره بعناية وبنقدّمه طازة في مقهى تمور."
+    "tapPrices": "اضغط لعرض الأسعار"
   },
   "admin": {
     "panel": "لوحة الإدارة",
@@ -132,11 +132,13 @@
       "signIn": "تسجيل الدخول",
       "signingIn": "جاري تسجيل الدخول",
       "checking": "جاري التحقق من جلسة الإدارة",
+      "dashboardLabel": "لوحة إدارة شركة ETA",
       "notice": "للمشرفين المخوّلين في شركة ETA فقط.",
       "error": "ما قدرنا نسجّل الدخول. جرّب مرة ثانية."
     },
     "common": {
       "tryAgain": "جرّب مرة ثانية",
+      "loading": "جاري التحميل",
       "active": "فعّال",
       "hidden": "مخفي",
       "pagination": "التنقل بين الصفحات",
@@ -325,6 +327,71 @@
       "currentAccount": "الحساب الحالي",
       "cannotDeleteSelf": "ما بتقدر تحذف حسابك",
       "deleteAdmin": "حذف المشرف"
+    },
+    "feedback": {
+      "dismissNotification": "إغلاق الإشعار",
+      "confirm": "تأكيد",
+      "requestFailed": "يرجى المحاولة مرة ثانية.",
+      "statusError": "فشل تحديث الحالة",
+      "product": {
+        "created": "تم إنشاء المنتج",
+        "updated": "تم تحديث المنتج",
+        "savedMessage": "تم حفظ {{name}} بنجاح.",
+        "deleted": "تم حذف المنتج",
+        "deletedMessage": "تم حذف {{name}}.",
+        "hidden": "تم إخفاء المنتج",
+        "activated": "تم تفعيل المنتج",
+        "hiddenMessage": "تم إخفاء {{name}} من القائمة.",
+        "activatedMessage": "أصبح {{name}} ظاهراً في القائمة.",
+        "deleteTitle": "حذف المنتج؟",
+        "deleteMessage": "هل تريد حذف {{name}} نهائياً؟ لا يمكن التراجع عن هذا الإجراء.",
+        "deleteConfirm": "حذف المنتج",
+        "deleteError": "تعذّر حذف المنتج",
+        "loadError": "تعذّر تحميل المنتجات"
+      },
+      "category": {
+        "created": "تم إنشاء القسم",
+        "updated": "تم تحديث القسم",
+        "savedMessage": "أصبح {{name}} جاهزاً للاستخدام.",
+        "deleted": "تم حذف القسم",
+        "deletedMessage": "تم حذف {{name}}.",
+        "hidden": "تم إخفاء القسم",
+        "activated": "تم تفعيل القسم",
+        "hiddenMessage": "تم إخفاء {{name}} وجميع منتجاته من القائمة.",
+        "activatedMessage": "أصبح {{name}} ظاهراً. ستبقى منتجاته مخفية حتى تفعيلها.",
+        "deleteTitle": "حذف القسم؟",
+        "deleteMessage": "هل تريد حذف {{name}}؟ لا يمكن حذف الأقسام المرتبطة بمنتجات.",
+        "deleteConfirm": "حذف القسم",
+        "deleteError": "تعذّر حذف القسم",
+        "loadError": "تعذّر تحميل الأقسام"
+      },
+      "slider": {
+        "created": "تم إنشاء الشريحة",
+        "updated": "تم تحديث الشريحة",
+        "savedMessage": "تم حفظ {{name}} بنجاح.",
+        "deleted": "تم حذف الشريحة",
+        "deletedMessage": "تم حذف {{name}}.",
+        "hidden": "تم إخفاء الشريحة",
+        "activated": "تم تفعيل الشريحة",
+        "hiddenMessage": "تم إخفاء {{name}} من الصفحة الرئيسية.",
+        "activatedMessage": "أصبحت {{name}} ظاهرة في الصفحة الرئيسية.",
+        "deleteTitle": "حذف الشريحة؟",
+        "deleteMessage": "هل تريد حذف {{name}} نهائياً؟ لا يمكن التراجع عن هذا الإجراء.",
+        "deleteConfirm": "حذف الشريحة",
+        "deleteError": "تعذّر حذف الشريحة",
+        "loadError": "تعذّر تحميل الشرائح"
+      },
+      "admin": {
+        "created": "تمت إضافة المشرف",
+        "createdMessage": "يمكن لـ {{email}} تسجيل الدخول الآن.",
+        "deleted": "تم حذف المشرف",
+        "deletedMessage": "لم يعد لدى {{email}} صلاحية الوصول.",
+        "deleteTitle": "حذف المشرف؟",
+        "deleteMessage": "هل تريد إلغاء صلاحية {{email}}؟ لن يتمكن من تسجيل الدخول بعد ذلك.",
+        "deleteConfirm": "حذف المشرف",
+        "deleteError": "تعذّر حذف المشرف",
+        "loadError": "تعذّر تحميل المشرفين"
+      }
     }
   }
 }

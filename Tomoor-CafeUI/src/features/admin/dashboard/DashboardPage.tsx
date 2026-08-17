@@ -59,11 +59,7 @@ export function DashboardPage() {
   }, [])
 
   const adminName = user?.email.split("@")[0] ?? "Admin"
-  const error = statsQuery.error instanceof Error
-    ? statsQuery.error.message
-    : statsQuery.error
-      ? t("admin.pages.dashboardError")
-      : ""
+  const error = statsQuery.error ? t("admin.pages.dashboardError") : ""
 
   return (
     <section>

@@ -8,9 +8,9 @@ import { resolveSiteImage } from "../siteContent"
 import { useI18n } from "@/localization/useI18n"
 import type { Product } from "@/entities/product/product.types"
 
-type PriceFilter = "all" | "under15" | "between15And20" | "over20"
+type PriceFilter = "all" | "under10" | "under15" | "between15And20" | "over20"
 
-const priceFilters: PriceFilter[] = ["all", "under15", "between15And20", "over20"]
+const priceFilters: PriceFilter[] = ["all", "under10", "under15", "between15And20", "over20"]
 
 function parsePrice(value: unknown) {
   if (value === null || value === undefined) return null
@@ -33,13 +33,14 @@ function matchesPriceFilter(product: Product, filter: PriceFilter) {
   if (filter === "all") return true
   const prices = productPrices(product)
   if (!prices.length) return false
+  if (filter === "under10") return prices.some((price) => price <= 10)
   if (filter === "under15") return prices.some((price) => price <= 15)
   if (filter === "between15And20") return prices.some((price) => price > 15 && price <= 20)
   return prices.some((price) => price > 20)
 }
 
 export function MenuPage() {
-  const { categories, products, isLoading, isUsingPreviewData } = useSiteData()
+  const { categories, products, isLoading } = useSiteData()
   const [searchParams, setSearchParams] = useSearchParams()
   const [search, setSearch] = useState("")
   const [priceFilter, setPriceFilter] = useState<PriceFilter>("all")
@@ -137,6 +138,20 @@ export function MenuPage() {
           >
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" /></svg>
           </button>
+          {hasActivePriceFilter && (
+            <button
+              className="full-menu-search__clear-price-filter"
+              type="button"
+              aria-label={t("menu.clearPriceFilter")}
+              onClick={() => {
+                setPriceFilter("all")
+                setPriceFilterOpen(false)
+              }}
+            >
+              <span lang={language} dir={direction}>{t(`menu.priceFilters.${priceFilter}`)}</span>
+              <b aria-hidden="true">×</b>
+            </button>
+          )}
           {priceFilterOpen && (
             <div className="full-menu-price-filter">
               {priceFilters.map((filter) => (
@@ -175,7 +190,6 @@ export function MenuPage() {
             <div className="full-menu-content__intro"><small lang={language} dir={direction}>{t("menu.findFavourite")}</small><h2 lang={language} dir={direction}>{t("menu.categories")}</h2></div>
             <MenuCategoryTabs categories={categories} activeId={activeId} onChange={selectCategory} />
           </div>
-          {isUsingPreviewData && <div className="full-menu-preview-note" lang={language} dir={direction}>{t("menu.preview")}</div>}
           <div className="full-menu-products" ref={productsRef}>
             {activeId === null && (
               <div className="full-menu-results-heading">

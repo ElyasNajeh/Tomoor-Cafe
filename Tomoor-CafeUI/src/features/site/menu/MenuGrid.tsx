@@ -2,7 +2,7 @@ import type { Category } from "@/entities/category/category.types"
 import type { Product } from "@/entities/product/product.types"
 import coldDrinkIcon from "@/assets/cold-drink-icon.png"
 import { MenuItemCard } from "./MenuItemCard"
-import { resolveCategoryImage } from "./menuCategoryImage"
+import { resolveSiteImage } from "../siteContent"
 import { useI18n } from "@/localization/useI18n"
 import { localizedPair } from "@/localization/localizedContent"
 
@@ -16,17 +16,17 @@ export function MenuGrid({ products, categories = [], grouped = false, hasSearch
   if (!grouped) return <ProductCards products={products} />
 
   const groups = categories
-    .map((category, index) => ({ category, index, products: products.filter((product) => product.category_id === category.id) }))
+    .map((category) => ({ category, products: products.filter((product) => product.category_id === category.id) }))
     .filter((group) => group.products.length)
 
   return (
     <div className="full-menu-groups">
-      {groups.map(({ category, index, products: categoryProducts }) => {
+      {groups.map(({ category, products: categoryProducts }) => {
         const name = localizedPair(category.name_en, category.name_ar, language)
         return (
           <section className="full-menu-group" key={category.id} aria-labelledby={`menu-group-${category.id}`}>
             <header className="full-menu-group__header">
-              <span className="full-menu-group__image"><img src={resolveCategoryImage(category, index)} alt="" loading="lazy" /></span>
+              {category.image && <span className="full-menu-group__image"><img src={resolveSiteImage(category.image)} alt="" loading="lazy" /></span>}
               <span className="full-menu-group__title">
                 <strong id={`menu-group-${category.id}`} lang={name.primaryLanguage}>{name.primary}</strong>
                 <span lang={name.secondaryLanguage}>{name.secondary}</span>

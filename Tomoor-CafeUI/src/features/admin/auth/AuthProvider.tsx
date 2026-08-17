@@ -20,7 +20,6 @@ import type {
 
 
 import { useRequest } from "@/shared/request/RequestProvider"
-import { queryPersister } from "@/shared/query/queryClient"
 
 type AuthContextValue = {
   user: AdminUser | null
@@ -90,12 +89,7 @@ export function AuthProvider({
       await runRequest(() => AuthApi.logout())
     } finally {
       queryClient.clear()
-
-      try {
-        await queryPersister.removeClient()
-      } finally {
-        setUser(null)
-      }
+      setUser(null)
     }
   }, [queryClient, runRequest])
 
