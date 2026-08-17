@@ -396,6 +396,7 @@ html[data-theme="dark"] .slider-order-field input{color:#e8eef7;border-color:#34
   .product-table:not(.product-table--head):not(.category-table):not(.slider-table){grid-template-columns:minmax(0,1fr) auto auto!important}
   .product-table:not(.product-table--head):not(.category-table):not(.slider-table) .product-cell{grid-column:1;grid-row:1}
   .product-table:not(.product-table--head):not(.category-table):not(.slider-table)>span:nth-child(2){grid-column:2!important;grid-row:1;align-self:center}
+  .product-table:not(.product-table--head):not(.category-table):not(.slider-table)>span:nth-child(2)::before{content:none}
   .product-table:not(.product-table--head):not(.category-table):not(.slider-table)>span:nth-child(4){grid-column:3!important;grid-row:1;align-self:center}
   .product-table:not(.product-table--head):not(.category-table):not(.slider-table)>span:nth-child(3){grid-column:1/-1!important;grid-row:2}
   .product-table:not(.product-table--head):not(.category-table):not(.slider-table) .row-actions{grid-row:3}
