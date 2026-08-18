@@ -3,7 +3,6 @@ import { categoryApi } from "@/entities/category/category.api"
 import { productApi } from "@/entities/product/product.api"
 import { sliderApi } from "@/entities/slider/slider.api"
 import { queryKeys } from "@/shared/query/queryClient"
-
 const SITE_LIST_LIMIT = 100
 
 export function useSiteData() {

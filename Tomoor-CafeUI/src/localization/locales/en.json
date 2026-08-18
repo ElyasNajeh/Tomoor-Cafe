@@ -211,7 +211,7 @@
           "image": "2. Slider Image"
         },
         "displayOrder": "Display order",
-        "displayOrderHelp": "Each slider must use a unique order number.",
+        "displayOrderHelp": "Visible sliders must use unique order numbers. Hidden sliders can reuse an order.",
         "activeLabel": "Active on home page",
         "activeHelp": "Visitors can see this slider.",
         "validation": {
@@ -255,7 +255,10 @@
       "dashboardEyebrow": "Overview",
       "welcome": "Welcome Back, {{name}}",
       "dashboardDescription": "Manage your store from one place.",
-      "dashboardError": "Unable to load dashboard",
+      "dashboardError": "We couldn't load the dashboard overview. Check your connection and try again.",
+      "hadithLoading": "Loading today's hadith…",
+      "hadithUnavailable": "Today's hadith could not be loaded. You can continue managing the dashboard normally.",
+      "hadithTitle": "Hadith of the day",
       "categoriesEyebrow": "Menu organization",
       "categoriesDescription": "Organize your menu into clear, visual collections.",
       "addCategory": "Add category",
@@ -331,8 +334,25 @@
     "feedback": {
       "dismissNotification": "Dismiss notification",
       "confirm": "Confirm",
-      "requestFailed": "Please try again.",
+      "requestFailed": "Check your connection, then try again.",
       "statusError": "Status update failed",
+      "errors": {
+        "network": "We couldn't reach the server. Check your connection and try again.",
+        "sessionExpired": "Your session has expired. Sign in again to continue.",
+        "forbidden": "You don't have permission to do that. Contact another administrator if you need access.",
+        "invalidCredentials": "The email or password is incorrect. Check both and try again.",
+        "emailExists": "An admin already uses this email address. Use a different email or manage the existing account.",
+        "categoryExists": "A category with these details already exists. Change the name and try again.",
+        "productExists": "A product with these details already exists. Change the name and try again.",
+        "sliderExists": "A slider with these details already exists. Change the title and try again.",
+        "categoryHasProducts": "This category still contains products. Move or delete its products before deleting the category.",
+        "activateCategoryFirst": "Activate this product's category first, then activate the product.",
+        "displayOrderUsed": "This display order is already used by a visible slider. Choose a different order number or hide the other slider.",
+        "cannotDeleteSelf": "You cannot delete your own account. Ask another administrator to remove it if needed.",
+        "requiredField": "Complete all required fields, then try again.",
+        "priceGreaterThanZero": "Enter a price greater than zero, then try again.",
+        "drinkPriceRequired": "Add a price for at least one drink size, then try again."
+      },
       "product": {
         "created": "Product created",
         "updated": "Product updated",
@@ -347,7 +367,8 @@
         "deleteMessage": "Permanently delete {{name}}? This cannot be undone.",
         "deleteConfirm": "Delete product",
         "deleteError": "Could not delete product",
-        "loadError": "Unable to load products"
+        "loadError": "We couldn't load products. Check your connection and try again.",
+        "visibilityError": "Could not change product visibility"
       },
       "category": {
         "created": "Category created",
@@ -363,7 +384,8 @@
         "deleteMessage": "Delete {{name}}? Categories used by products cannot be deleted.",
         "deleteConfirm": "Delete category",
         "deleteError": "Could not delete category",
-        "loadError": "Unable to load categories"
+        "loadError": "We couldn't load categories. Check your connection and try again.",
+        "visibilityError": "Could not change category visibility"
       },
       "slider": {
         "created": "Slider created",
@@ -371,6 +393,8 @@
         "savedMessage": "{{name}} was saved successfully.",
         "deleted": "Slider deleted",
         "deletedMessage": "{{name}} was removed.",
+        "saveError": "Could not save slider",
+        "visibilityError": "Could not change slider visibility",
         "hidden": "Slider hidden",
         "activated": "Slider activated",
         "hiddenMessage": "{{name}} is now hidden from the home page.",
@@ -379,7 +403,7 @@
         "deleteMessage": "Permanently delete {{name}}? This cannot be undone.",
         "deleteConfirm": "Delete slider",
         "deleteError": "Could not delete slider",
-        "loadError": "Unable to load sliders"
+        "loadError": "We couldn't load sliders. Check your connection and try again."
       },
       "admin": {
         "created": "Admin added",
@@ -390,7 +414,7 @@
         "deleteMessage": "Remove access for {{email}}? They will no longer be able to sign in.",
         "deleteConfirm": "Delete admin",
         "deleteError": "Could not delete admin",
-        "loadError": "Unable to load admins"
+        "loadError": "We couldn't load administrators. Check your connection and try again."
       }
     }
   }

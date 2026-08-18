@@ -1,6 +1,6 @@
 import { useState, type FormEvent, type ReactNode } from "react"
 import type { Category } from "@/features/admin/categories/categories.types"
-import { ApiError } from "@/shared/api/error"
+import { getAdminErrorMessage } from "@/features/admin/adminErrorMessage"
 import { ImageUpload } from "@/shared/components/AdminComponents"
 import { Icon } from "@/shared/components/Icon"
 import { useI18n } from "@/localization/useI18n"
@@ -94,7 +94,7 @@ export function ProductFormDialog(props: ProductFormDialogProps) {
       await props.onSave(props.product, toPayload(form))
       props.onClose()
     } catch (caught) {
-      setFormError(language === "en" && caught instanceof ApiError ? caught.message : t("admin.forms.product.validation.saveFailed"))
+      setFormError(getAdminErrorMessage(caught, t, "admin.forms.product.validation.saveFailed"))
     } finally {
       setSaving(false)
     }

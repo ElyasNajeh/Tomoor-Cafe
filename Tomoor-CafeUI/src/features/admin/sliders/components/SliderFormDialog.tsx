@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react"
-import { ApiError } from "@/shared/api/error"
+import { getAdminErrorMessage } from "@/features/admin/adminErrorMessage"
 import { ImageUpload } from "@/shared/components/AdminComponents"
 import { Icon } from "@/shared/components/Icon"
 import { useI18n } from "@/localization/useI18n"
@@ -10,7 +10,7 @@ type SliderFormDialogProps = {
   slider: Slider | null
   nextDisplayOrder: number | null
   onClose: () => void
-  onSave: (slider: Slider | null, payload: SliderPayload, isActive: boolean) => Promise<void>
+  onSave: (slider: Slider | null, payload: SliderPayload) => Promise<void>
 }
 
 function createInitialForm(slider: Slider | null, nextDisplayOrder: number | null): SliderFormValues {
@@ -59,11 +59,12 @@ export function SliderFormDialog(props: SliderFormDialogProps) {
         title_ar: form.title_ar,
         title_en: form.title_en,
         display_order: displayOrder,
+        is_active: form.is_active,
         image: form.image,
-      }, form.is_active)
+      })
       props.onClose()
     } catch (caught) {
-      setFormError(language === "en" && caught instanceof ApiError ? caught.message : t("admin.forms.slider.validation.saveFailed"))
+      setFormError(getAdminErrorMessage(caught, t, "admin.forms.slider.validation.saveFailed"))
     } finally {
       setSaving(false)
     }

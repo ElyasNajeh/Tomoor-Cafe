@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useFeedback } from "@/shared/feedback/FeedbackProvider"
+import { getAdminErrorMessage } from "@/features/admin/adminErrorMessage"
 import { queryKeys } from "@/shared/query/queryClient"
 import { SlidersApi } from "../sliders.api"
 import type { Slider, SliderPayload } from "../sliders.types"
@@ -28,20 +29,13 @@ export function useSliders() {
     mutationFn: async ({
       slider,
       payload,
-      isActive,
     }: {
       slider: Slider | null
       payload: SliderPayload
-      isActive: boolean
     }) => {
       const savedSlider = slider
         ? await SlidersApi.update(slider.id, payload)
         : await SlidersApi.create(payload)
-
-      if (savedSlider.is_active !== isActive) {
-        return SlidersApi.toggle(savedSlider.id)
-      }
-
       return savedSlider
     },
     onSuccess: async (_, { slider, payload }) => {
@@ -119,9 +113,16 @@ export function useSliders() {
   async function saveSlider(
     slider: Slider | null,
     payload: SliderPayload,
-    isActive: boolean,
   ) {
-    await saveMutation.mutateAsync({ slider, payload, isActive })
+    try {
+      await saveMutation.mutateAsync({ slider, payload })
+    } catch (caught) {
+      toast.error(
+        t("admin.feedback.slider.saveError"),
+        getAdminErrorMessage(caught, t, "admin.feedback.requestFailed"),
+      )
+      throw caught
+    }
   }
 
   async function deleteSlider(slider: Slider) {
@@ -138,16 +139,19 @@ export function useSliders() {
 
     try {
       await deleteMutation.mutateAsync(slider)
-    } catch {
-      toast.error(t("admin.feedback.slider.deleteError"), t("admin.feedback.requestFailed"))
+    } catch (caught) {
+      toast.error(t("admin.feedback.slider.deleteError"), getAdminErrorMessage(caught, t, "admin.feedback.requestFailed"))
     }
   }
 
   async function toggleSlider(slider: Slider) {
     try {
       await toggleMutation.mutateAsync(slider)
-    } catch {
-      toast.error(t("admin.feedback.statusError"), t("admin.feedback.requestFailed"))
+    } catch (caught) {
+      toast.error(
+        t("admin.feedback.slider.visibilityError"),
+        getAdminErrorMessage(caught, t, "admin.feedback.requestFailed"),
+      )
     }
   }
 

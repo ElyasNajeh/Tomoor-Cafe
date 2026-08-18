@@ -81,6 +81,9 @@ export function DashboardPage() {
       {error ? (
         <div className="error-state">
           <p>{error}</p>
+          <button className="button button--secondary" onClick={() => void statsQuery.refetch()}>
+            {t("admin.common.tryAgain")}
+          </button>
         </div>
       ) : (
         <div className="stats-grid">
@@ -117,7 +120,8 @@ function HadithCard({
   hadith: Hadith | null
   failed: boolean
 }) {
-  let content = <p>جارٍ تحميل الحديث…</p>
+  const { t, language } = useI18n()
+  let content = <p>{t("admin.pages.hadithLoading")}</p>
 
   if (hadith) {
     content = (
@@ -129,7 +133,7 @@ function HadithCard({
   } else if (failed) {
     content = (
       <p>
-        تعذّر تحميل الحديث اليوم. يمكنك متابعة إدارة النظام بشكل طبيعي.
+        {t("admin.pages.hadithUnavailable")}
       </p>
     )
   }
@@ -138,8 +142,9 @@ function HadithCard({
     <article
       className="hadith-card"
       dir="rtl"
+      lang={language}
     >
-      <span>حديث اليوم</span>
+      <span>{t("admin.pages.hadithTitle")}</span>
       {content}
     </article>
   )

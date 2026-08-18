@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react"
-import { ApiError } from "@/shared/api/error"
+import { getAdminErrorMessage } from "@/features/admin/adminErrorMessage"
 import { ImageUpload } from "@/shared/components/AdminComponents"
 import { Icon } from "@/shared/components/Icon"
 import { useI18n } from "@/localization/useI18n"
@@ -45,7 +45,7 @@ export function CategoryFormDialog({ category, onClose, onSave }: CategoryFormDi
       await onSave(category, form)
       onClose()
     } catch (caught) {
-      setFormError(language === "en" && caught instanceof ApiError ? caught.message : t("admin.forms.category.validation.saveFailed"))
+      setFormError(getAdminErrorMessage(caught, t, "admin.forms.category.validation.saveFailed"))
     } finally {
       setSaving(false)
     }

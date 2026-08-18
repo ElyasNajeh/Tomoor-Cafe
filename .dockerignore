@@ -9,5 +9,3 @@
 **/node_modules
 Tomoor-CafeUI/dist
 Tomoor-CafeUI/src/assets/*
-!Tomoor-CafeUI/src/assets/seed_images
-!Tomoor-CafeUI/src/assets/seed_images/**

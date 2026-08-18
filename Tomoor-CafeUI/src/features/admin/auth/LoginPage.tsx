@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react"
 import { Link, Navigate, useNavigate } from "react-router-dom"
 
-import { ApiError } from "@/shared/api/error"
+import { getAdminErrorMessage } from "@/features/admin/adminErrorMessage"
 import { useAuth } from "./AuthProvider"
 import { AuthLoader } from "./AuthLoader"
 import logo from "@/assets/logo.png"
@@ -18,7 +18,7 @@ export function LoginPage() {
 
   const { login, isAuthenticated, isAuthReady } = useAuth()
   const navigate = useNavigate()
-  const { direction, t, language } = useI18n()
+  const { direction, t } = useI18n()
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -36,11 +36,7 @@ export function LoginPage() {
 
       navigate("/admin", { replace: true })
     } catch (caught) {
-      setError(
-        language === "en" && caught instanceof ApiError
-          ? caught.message
-          : t("admin.login.error")
-      )
+      setError(getAdminErrorMessage(caught, t, "admin.login.error"))
     } finally {
       setIsSubmitting(false)
     }

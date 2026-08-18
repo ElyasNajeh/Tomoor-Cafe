@@ -74,6 +74,7 @@ export function MenuSection({ sliders }: { sliders: Slider[] }) {
   const [slideIndex, setSlideIndex] = useState(0)
   const [activeSlider, setActiveSlider] = useState(0)
   const [heroPaused, setHeroPaused] = useState(false)
+  const [sliderPaused, setSliderPaused] = useState(false)
   const carouselRef = useRef<HTMLDivElement | null>(null)
   const sliderRefs = useRef<Array<HTMLAnchorElement | null>>([])
   const activeSliderRef = useRef(0)
@@ -101,7 +102,7 @@ export function MenuSection({ sliders }: { sliders: Slider[] }) {
   }, [sliderCards.length])
 
   useEffect(() => {
-    if (sliderCards.length <= 1 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
+    if (sliderPaused || sliderCards.length <= 1 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
 
     const carousel = carouselRef.current
     const interval = window.setInterval(() => {
@@ -115,10 +116,11 @@ export function MenuSection({ sliders }: { sliders: Slider[] }) {
       window.clearInterval(interval)
       cancelSliderAnimation(sliderAnimationRef, carousel)
     }
-  }, [sliderCards.length])
+  }, [sliderCards.length, sliderPaused])
 
   const moveSlider = (amount: number) => {
     if (!sliderCards.length) return
+    setSliderPaused(true)
     const nextIndex = Math.min(Math.max(activeSlider + amount, 0), sliderCards.length - 1)
     activeSliderRef.current = nextIndex
     setActiveSlider(nextIndex)

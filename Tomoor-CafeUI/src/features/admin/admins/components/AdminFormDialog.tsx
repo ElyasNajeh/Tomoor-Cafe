@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react"
-import { ApiError } from "@/shared/api/error"
+import { getAdminErrorMessage } from "@/features/admin/adminErrorMessage"
 import { Icon } from "@/shared/components/Icon"
 import { useI18n } from "@/localization/useI18n"
 import type { AdminPayload } from "../admins.types"
@@ -48,11 +48,7 @@ export function AdminFormDialog({
 
       onClose()
     } catch (caught) {
-      setFormError(
-        language === "en" && caught instanceof ApiError
-          ? caught.message
-          : t("admin.forms.admin.validation.saveFailed"),
-      )
+      setFormError(getAdminErrorMessage(caught, t, "admin.forms.admin.validation.saveFailed"))
     } finally {
       setSaving(false)
     }

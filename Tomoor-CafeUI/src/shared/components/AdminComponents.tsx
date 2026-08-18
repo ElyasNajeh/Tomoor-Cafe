@@ -2,6 +2,7 @@ import { useRef, useState, type ChangeEvent, type ReactNode } from "react"
 import { getAssetUrl } from "@/shared/api/assets"
 import { Icon, type IconName } from "./Icon"
 import { useI18n } from "@/localization/useI18n"
+import { getAdminErrorMessage } from "@/features/admin/adminErrorMessage"
 
 export function PageHeader({ eyebrow, title, description, actions, icon }: { eyebrow?: string; title: ReactNode; description?: string; actions?: ReactNode; icon?: IconName }) {
   return (
@@ -119,7 +120,7 @@ export function ImageUpload({ value, onChange, upload, disabled }: { value: stri
     try {
       onChange(await upload(file))
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : t("admin.common.uploadFailed"))
+      setError(getAdminErrorMessage(caught, t, "admin.common.uploadFailed"))
     } finally {
       setUploading(false)
       event.target.value = ""

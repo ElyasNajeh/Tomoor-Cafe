@@ -12,6 +12,7 @@ export type SliderPayload = {
   title_ar: string
   title_en: string
   display_order: number
+  is_active: boolean
   image: string
 }
 

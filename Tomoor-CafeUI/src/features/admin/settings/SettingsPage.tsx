@@ -6,6 +6,7 @@ import tomoorLogo from "@/assets/tomoor-images/web/logo-site.png"
 import { PageHeader } from "@/shared/components/AdminComponents"
 import { Icon } from "@/shared/components/Icon"
 import { applyTheme, getInitialTheme, type Theme } from "@/shared/theme"
+import { getMessage, type Language } from "@/localization/i18n"
 import { useI18n } from "@/localization/useI18n"
 
 const THEMES = [
@@ -15,16 +16,18 @@ const THEMES = [
 
 function getMenuUrl() {
   const configuredSiteUrl = import.meta.env.VITE_PUBLIC_SITE_URL?.trim()
-  const baseUrl = configuredSiteUrl || window.location.origin
-  const normalizedUrl = baseUrl.replace(/\/+$/, "")
+  const url = new URL(configuredSiteUrl || window.location.origin, window.location.origin)
+  const normalizedPath = url.pathname.replace(/\/+$/, "")
 
-  return normalizedUrl.endsWith("/menu") ? normalizedUrl : `${normalizedUrl}/menu`
+  url.pathname = normalizedPath.endsWith("/menu") ? normalizedPath : `${normalizedPath}/menu`
+  return url.toString()
 }
 
 export function SettingsPage() {
   const [selectedTheme, setSelectedTheme] = useState<Theme>(getInitialTheme)
   const [isQrPreviewOpen, setIsQrPreviewOpen] = useState(false)
-  const { t } = useI18n()
+  const { language, t } = useI18n()
+  const [qrLanguage, setQrLanguage] = useState<Language>(language)
   const menuUrl = getMenuUrl()
 
   function selectTheme(theme: Theme) {
@@ -78,7 +81,7 @@ export function SettingsPage() {
             <div><h2>{t("admin.pages.menuQr")}</h2><p>{t("admin.pages.menuQrDescription")}</p></div>
           </div>
           <div className="menu-qr-card__body">
-            <button className="button menu-qr-card__button" type="button" onClick={() => setIsQrPreviewOpen(true)}>
+            <button className="button menu-qr-card__button" type="button" onClick={() => { setQrLanguage(language); setIsQrPreviewOpen(true) }}>
               <Icon name="menu" />
               {t("admin.pages.generatePrintMenuQr")}
             </button>
@@ -96,15 +99,18 @@ export function SettingsPage() {
             <div className="menu-qr-preview-stage">
               <div className="menu-qr-print-area">
                 <MenuQrPaper
-                  heading={t("admin.pages.tomoorMenuQrHeading")}
-                  logoAlt={t("admin.pages.menuQrLogoAlt")}
+                  heading={getMessage(qrLanguage, "admin.pages.tomoorMenuQrHeading")}
+                  logoAlt={getMessage(qrLanguage, "admin.pages.menuQrLogoAlt")}
                   menuUrl={menuUrl}
-                  scanLabel={t("admin.pages.scanForMenu")}
+                  scanLabel={getMessage(qrLanguage, "admin.pages.scanForMenu")}
                 />
               </div>
             </div>
             <div className="form-actions menu-qr-dialog__actions">
               <button type="button" className="button button--ghost" onClick={() => setIsQrPreviewOpen(false)}>{t("admin.forms.common.close")}</button>
+              <button type="button" className="button button--ghost" onClick={() => setQrLanguage((current) => current === "en" ? "ar" : "en")} aria-label={getMessage(qrLanguage, "language.switch")}>
+                {getMessage(qrLanguage, "language.switchTo")}
+              </button>
               <button type="button" className="button" onClick={() => window.print()}>{t("admin.pages.printMenuQr")}</button>
             </div>
           </section>

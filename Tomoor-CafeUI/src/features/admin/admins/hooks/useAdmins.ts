@@ -4,6 +4,7 @@ import { queryKeys } from "@/shared/query/queryClient"
 import { AdminsApi } from "../admins.api"
 import type { Admin, AdminPayload } from "../admins.types"
 import { useI18n } from "@/localization/useI18n"
+import { getAdminErrorMessage } from "@/features/admin/adminErrorMessage"
 
 export function useAdmins(currentAdminId: number | undefined) {
   const { toast, confirm } = useFeedback()
@@ -53,8 +54,8 @@ export function useAdmins(currentAdminId: number | undefined) {
 
     try {
       await deleteMutation.mutateAsync(admin)
-    } catch {
-      toast.error(t("admin.feedback.admin.deleteError"), t("admin.feedback.requestFailed"))
+    } catch (caught) {
+      toast.error(t("admin.feedback.admin.deleteError"), getAdminErrorMessage(caught, t, "admin.feedback.requestFailed"))
     }
   }
 

@@ -5,6 +5,7 @@ import { queryKeys } from "@/shared/query/queryClient"
 import { CategoriesApi } from "../categories.api"
 import type { Category, CategoryPayload } from "../categories.types"
 import { useI18n } from "@/localization/useI18n"
+import { getAdminErrorMessage } from "@/features/admin/adminErrorMessage"
 
 const PAGE_SIZE = 8
 const LIST_LIMIT = 100
@@ -130,10 +131,10 @@ export function useCategories() {
 
     try {
       await deleteMutation.mutateAsync(category)
-    } catch {
+    } catch (caught) {
       toast.error(
         t("admin.feedback.category.deleteError"),
-        t("admin.feedback.requestFailed"),
+        getAdminErrorMessage(caught, t, "admin.feedback.requestFailed"),
       )
     }
   }
@@ -141,10 +142,10 @@ export function useCategories() {
   async function toggleCategory(category: Category) {
     try {
       await toggleMutation.mutateAsync(category)
-    } catch {
+    } catch (caught) {
       toast.error(
-        t("admin.feedback.statusError"),
-        t("admin.feedback.requestFailed"),
+        t("admin.feedback.category.visibilityError"),
+        getAdminErrorMessage(caught, t, "admin.feedback.requestFailed"),
       )
     }
   }

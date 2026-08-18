@@ -5,6 +5,7 @@ import { useFeedback } from "@/shared/feedback/FeedbackProvider"
 import { queryKeys } from "@/shared/query/queryClient"
 import { ProductsApi } from "../products.api"
 import { useI18n } from "@/localization/useI18n"
+import { getAdminErrorMessage } from "@/features/admin/adminErrorMessage"
 import type { Product, ProductPayload } from "../products.types"
 
 const PAGE_SIZE = 10
@@ -132,16 +133,16 @@ export function useProducts() {
 
     try {
       await deleteMutation.mutateAsync(product)
-    } catch {
-      toast.error(t("admin.feedback.product.deleteError"), t("admin.feedback.requestFailed"))
+    } catch (caught) {
+      toast.error(t("admin.feedback.product.deleteError"), getAdminErrorMessage(caught, t, "admin.feedback.requestFailed"))
     }
   }
 
   async function toggleProduct(product: Product) {
     try {
       await toggleMutation.mutateAsync(product)
-    } catch {
-      toast.error(t("admin.feedback.statusError"), t("admin.feedback.requestFailed"))
+    } catch (caught) {
+      toast.error(t("admin.feedback.product.visibilityError"), getAdminErrorMessage(caught, t, "admin.feedback.requestFailed"))
     }
   }
 
