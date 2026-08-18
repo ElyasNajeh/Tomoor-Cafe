@@ -149,6 +149,29 @@ Database schema changes are applied explicitly with Alembic before using the API
 docker compose exec api alembic upgrade head
 ```
 
+The API image includes every bundled catalog image. Run the catalog seed entirely
+inside Docker with:
+
+```bash
+docker compose exec api python -m app.seed
+```
+
+On a fresh database, this installs the bundled images and seeds categories,
+products, and sliders. If any product exists, it leaves all catalog data
+unchanged. Seed images use the same validated WebP pipeline as admin uploads
+(quality 84, encoder method 6).
+
+After changing bundled seed images, rebuild the API image and refresh only the
+seed-managed slider images without resetting any other catalog data:
+
+```bash
+docker compose up -d --build api
+docker compose exec api python -m app.seed --refresh-sliders
+```
+
+The refresh command is safe to rerun. It keeps titles, ordering, active status,
+categories, and products unchanged.
+
 To preview and then migrate existing product, category, and slider JPG/PNG uploads:
 
 ```bash
@@ -172,6 +195,13 @@ already WebP but predate this pipeline:
 ```bash
 docker compose exec api python -m app.migrate_slider_images --dry-run
 docker compose exec api python -m app.migrate_slider_images
+```
+
+For local development only, seed the fixed development admin with
+`a@gmail.com` / `1234`:
+
+```bash
+docker compose exec api python -m app.seed_dev_admin
 ```
 
 ## Create the first admin
