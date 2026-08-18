@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from pathlib import Path
 from random import Random
 from re import sub
@@ -8,17 +9,18 @@ from app.features.categories.model import Category
 from app.features.products.model import Drink, Food, Product, ProductType
 from app.features.sliders.images import process_slider_image_path
 from app.features.sliders.model import Slider
-from app.shared.images import process_image_path
+from app.shared.images import path_from_upload_url, process_image_path
 
 
 CATEGORIES = [
     {
         "folder": "Cold Lattes", "name_en": "Cold Lattes", "name_ar": "لاتيه بارد",
         "type": ProductType.DRINK, "cover": "iced-spanish-latte.jpg",
+        "slider": "iced caramel-must-be-slider.jpg",
         "slider_en": "iced latte", "slider_ar": "لاتيه بارد وكريمي",
         "products": [
             ("ice-latte.jpg", "Classic Iced Latte", "آيس لاتيه كلاسيك", "Smooth espresso and chilled milk over ice.", "إسبريسو ناعم وحليب بارد مع الثلج."),
-            ("iced caramel.jpg", "Iced Caramel Latte", "آيس لاتيه كراميل", "Chilled latte with a rich caramel finish.", "لاتيه بارد بلمسة كراميل غنية."),
+            ("iced caramel-must-be-slider.jpg", "Iced Caramel Latte", "آيس لاتيه كراميل", "Chilled latte with a rich caramel finish.", "لاتيه بارد بلمسة كراميل غنية."),
             ("iced-spanish-latte.jpg", "Iced Spanish Latte", "آيس سبانيش لاتيه", "Sweet, creamy milk balanced with bold espresso.", "حليب حلو وكريمي مع إسبريسو غني."),
             ("latte.jpg", "House Iced Latte", "آيس لاتيه الدار", "Our refreshing signature espresso and milk blend.", "خلطة منعشة من الإسبريسو والحليب على طريقتنا."),
             ("vanilla late.jpg", "Iced Vanilla Latte", "آيس فانيلا لاتيه", "Velvety iced latte scented with vanilla.", "لاتيه بارد مخملي بنكهة الفانيلا."),
@@ -67,12 +69,13 @@ CATEGORIES = [
     {
         "folder": "Hot latte", "name_en": "Hot Lattes", "name_ar": "لاتيه ساخن",
         "type": ProductType.DRINK, "cover": "Hot Latte Category.jpg",
+        "slider": "hot latte-must-be-slider.jpg",
         "slider_en": "Warm lattes", "slider_ar": "لاتيه دافئ",
         "products": [
             ("codex_put_a_good_name_for_this.jpeg", "Blueberry Velvet Latte", "لاتيه التوت المخملي", "A cozy latte with a delicate blueberry note.", "لاتيه دافئ بلمسة توت رقيقة."),
             ("codex_put_a_good_name_for_this3.jpg", "Honey Lavender Latte", "لاتيه العسل واللافندر", "Floral lavender latte gently sweetened with honey.", "لاتيه باللافندر محلى بلطف بالعسل."),
             ("Hot Latte Category.jpg", "Tomoor Signature Latte", "لاتيه تمور المميز", "Our signature smooth espresso with steamed milk.", "إسبريسو تمور المميز مع حليب مبخر ناعم."),
-            ("hot latte.jpg", "Classic Hot Latte", "لاتيه ساخن كلاسيك", "Rich espresso softened with silky steamed milk.", "إسبريسو غني مع حليب مبخر حريري."),
+            ("hot latte-must-be-slider.jpg", "Classic Hot Latte", "لاتيه ساخن كلاسيك", "Rich espresso softened with silky steamed milk.", "إسبريسو غني مع حليب مبخر حريري."),
         ],
     },
     {
@@ -87,6 +90,14 @@ CATEGORIES = [
         ],
     },
 ]
+
+
+@dataclass(frozen=True)
+class SliderRefreshResult:
+    updated: int
+    unchanged: int
+    missing: int
+    previous_images: tuple[str, ...]
 
 
 def _slug(value: str) -> str:
@@ -109,7 +120,7 @@ def _install_seed_images(source_root: Path | None = None) -> dict[tuple[str, str
     installed = {}
     for category in CATEGORIES:
         folder = category["folder"]
-        filenames = {category["cover"]}
+        filenames = {category["cover"], category.get("slider", category["cover"])}
         filenames.update(filename for filename, *_ in category["products"])
         for filename in filenames:
             source = source_root / folder / filename
@@ -118,6 +129,59 @@ def _install_seed_images(source_root: Path | None = None) -> dict[tuple[str, str
             processed = process_image_path(source, f"seed/{_slug(folder)}")
             installed[(folder, filename)] = processed.url
     return installed
+
+
+def refresh_seed_slider_images(db: Session) -> SliderRefreshResult:
+    """Refresh explicitly overridden seed sliders without changing catalog data."""
+    source_root = _seed_source_root()
+    updated = 0
+    unchanged = 0
+    missing = 0
+    previous_images: list[str] = []
+
+    for order, category_seed in enumerate(CATEGORIES, start=1):
+        slider_filename = category_seed.get("slider")
+        if slider_filename is None:
+            continue
+
+        slider = (
+            db.query(Slider)
+            .filter(
+                Slider.title_en == category_seed["slider_en"],
+                Slider.title_ar == category_seed["slider_ar"],
+                Slider.display_order == order,
+            )
+            .one_or_none()
+        )
+        if slider is None:
+            missing += 1
+            continue
+
+        processed = process_slider_image_path(
+            source_root / category_seed["folder"] / slider_filename,
+            f"seed/sliders/{_slug(category_seed['folder'])}",
+        )
+        current_path = path_from_upload_url(slider.image)
+        if current_path is not None and current_path.is_file():
+            try:
+                is_unchanged = current_path.read_bytes() == processed.path.read_bytes()
+            except OSError:
+                is_unchanged = False
+            if is_unchanged:
+                processed.path.unlink(missing_ok=True)
+                unchanged += 1
+                continue
+
+        previous_images.append(slider.image)
+        slider.image = processed.url
+        updated += 1
+
+    return SliderRefreshResult(
+        updated=updated,
+        unchanged=unchanged,
+        missing=missing,
+        previous_images=tuple(previous_images),
+    )
 
 
 def seed_catalog(db: Session) -> bool:
@@ -140,8 +204,9 @@ def seed_catalog(db: Session) -> bool:
         db.add(category)
         db.flush()
 
+        slider_filename = category_seed.get("slider", category_seed["cover"])
         slider_image = process_slider_image_path(
-            source_root / folder / category_seed["cover"],
+            source_root / folder / slider_filename,
             f"seed/sliders/{_slug(folder)}",
         )
         db.add(Slider(
