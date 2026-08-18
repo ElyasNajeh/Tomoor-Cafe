@@ -7,7 +7,6 @@ COPY Tomoor-CafeAPI/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY Tomoor-CafeAPI/ .
-COPY Tomoor-CafeUI/src/assets/seed_images/ /app/seed-assets/seed_images/
 
 EXPOSE 8000
 
