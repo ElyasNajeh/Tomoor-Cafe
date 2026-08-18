@@ -5,7 +5,8 @@ from sqlalchemy.orm import Session
 from app.shared import crud
 from app.features.sliders.model import Slider
 from app.features.sliders.schema import SliderCreate
-from app.shared.images import save_image
+from app.features.sliders.images import save_slider_upload
+from app.shared.images import cleanup_replaced_image
 
 
 def create_slider(db: Session, slider_data: SliderCreate):
@@ -78,7 +79,9 @@ def update_slider(db: Session, slider_id: int, slider_data: SliderCreate):
 
     if exist_order:
         raise HTTPException(status_code=400, detail="Display order already exists")
+    previous_image = slider.image
     updated_slider = crud.update_by_id(db, Slider, slider_id, slider_data.model_dump())
+    cleanup_replaced_image(db, previous_image, updated_slider.image)
     return updated_slider
 
 
@@ -105,4 +108,4 @@ def toggle_slider_status(db: Session, slider_id: int):
 
 
 def upload_image(file: UploadFile):
-    return save_image(file, "sliders")
+    return save_slider_upload(file)

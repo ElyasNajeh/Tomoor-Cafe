@@ -421,9 +421,13 @@ html {
 .home-category-carousel {
   overflow-x: auto;
   overscroll-behavior-inline: contain;
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   scrollbar-width: none;
-  scroll-snap-type: inline mandatory;
+  scroll-snap-type: inline proximity;
+}
+
+.home-category-carousel.is-animating {
+  scroll-snap-type: none;
 }
 
 .home-category-carousel::-webkit-scrollbar {
@@ -450,10 +454,13 @@ html {
   box-shadow: 0 18px 35px rgba(52, 30, 18, 0.16);
   text-align: start;
   text-decoration: none;
-  scroll-snap-align: start;
+  scroll-snap-align: center;
   isolation: isolate;
   backdrop-filter: blur(7px);
-  transition: transform 250ms ease, background 250ms ease, box-shadow 250ms ease;
+  transition:
+    transform 600ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 500ms ease,
+    box-shadow 500ms ease;
 }
 
 .home-category-card:nth-child(3n + 2) {
@@ -527,7 +534,9 @@ html {
   height: 100%;
   object-fit: cover;
   opacity: 0.9;
-  transition: transform 400ms ease, opacity 250ms ease;
+  transition:
+    transform 650ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 500ms ease;
 }
 
 .home-category-card:hover .home-category-card__image img,

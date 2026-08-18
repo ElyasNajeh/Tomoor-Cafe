@@ -4,6 +4,7 @@ from decimal import Decimal
 from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
 from app.features.products.model import ProductType
+from app.shared.images import validate_webp_url
 
 
 class FoodData(BaseModel):
@@ -62,6 +63,11 @@ class ProductCreate(BaseModel):
         if not value:
             raise ValueError("This field is required")
         return value
+
+    @field_validator("image")
+    @classmethod
+    def processed_image(cls, value: str) -> str:
+        return validate_webp_url(value)
 
     @model_validator(mode="after")
     def validate_pricing(self):

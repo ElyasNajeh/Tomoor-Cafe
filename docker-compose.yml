@@ -37,7 +37,8 @@ services:
 
   api:
     build:
-      context: ./Tomoor-CafeAPI
+      context: .
+      dockerfile: Tomoor-CafeAPI/Dockerfile
 
     container_name: tomoor-api
     restart: unless-stopped

@@ -1,14 +1,14 @@
 from pathlib import Path
 from random import Random
 from re import sub
-from shutil import copyfile
 
 from sqlalchemy.orm import Session
 
-from app.core.config import settings
 from app.features.categories.model import Category
 from app.features.products.model import Drink, Food, Product, ProductType
+from app.features.sliders.images import process_slider_image_path
 from app.features.sliders.model import Slider
+from app.shared.images import process_image_path
 
 
 CATEGORIES = [
@@ -93,7 +93,7 @@ def _slug(value: str) -> str:
     return sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
 
 
-def _install_seed_images() -> dict[tuple[str, str], str]:
+def _seed_source_root() -> Path:
     candidates = [
         Path("/app/seed-assets/seed_images"),
         Path(__file__).resolve().parents[3] / "Tomoor-CafeUI" / "src" / "assets" / "seed_images",
@@ -101,22 +101,22 @@ def _install_seed_images() -> dict[tuple[str, str], str]:
     source_root = next((path for path in candidates if path.is_dir()), None)
     if source_root is None:
         raise RuntimeError("seed_images directory was not found")
+    return source_root
 
-    target_root = Path(settings.UPLOAD_DIR).resolve() / "seed"
+
+def _install_seed_images(source_root: Path | None = None) -> dict[tuple[str, str], str]:
+    source_root = source_root or _seed_source_root()
     installed = {}
     for category in CATEGORIES:
         folder = category["folder"]
-        target_dir = target_root / _slug(folder)
-        target_dir.mkdir(parents=True, exist_ok=True)
-        for filename, *_ in category["products"]:
+        filenames = {category["cover"]}
+        filenames.update(filename for filename, *_ in category["products"])
+        for filename in filenames:
             source = source_root / folder / filename
             if not source.is_file():
                 raise RuntimeError(f"Missing seed image: {source}")
-            target_name = f"{_slug(source.stem)}{source.suffix.lower()}"
-            target = target_dir / target_name
-            if not target.exists():
-                copyfile(source, target)
-            installed[(folder, filename)] = f"/uploads/seed/{_slug(folder)}/{target_name}"
+            processed = process_image_path(source, f"seed/{_slug(folder)}")
+            installed[(folder, filename)] = processed.url
     return installed
 
 
@@ -125,7 +125,8 @@ def seed_catalog(db: Session) -> bool:
     if db.query(Product.id).first() is not None:
         return False
 
-    images = _install_seed_images()
+    source_root = _seed_source_root()
+    images = _install_seed_images(source_root)
     prices = Random(20260815)
     drink_index = 0
 
@@ -139,9 +140,13 @@ def seed_catalog(db: Session) -> bool:
         db.add(category)
         db.flush()
 
+        slider_image = process_slider_image_path(
+            source_root / folder / category_seed["cover"],
+            f"seed/sliders/{_slug(folder)}",
+        )
         db.add(Slider(
             title_en=category_seed["slider_en"], title_ar=category_seed["slider_ar"],
-            display_order=order, image=cover, is_active=True,
+            display_order=order, image=slider_image.url, is_active=True,
         ))
 
         for filename, name_en, name_ar, description_en, description_ar in category_seed["products"]:

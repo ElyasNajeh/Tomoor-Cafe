@@ -15,12 +15,69 @@ const heroSlides = [
   { image: baristaImage, titleKey: "site.home.slides.threeTitle", subtitleKey: "site.home.slides.threeSubtitle", position: "center center" },
 ] as const
 
+const SLIDER_SCROLL_DURATION_MS = 1150
+
+function easeSliderMovement(progress: number) {
+  return progress * progress * progress * (progress * (progress * 6 - 15) + 10)
+}
+
+function cancelSliderAnimation(
+  animationRef: { current: number | null },
+  carousel?: HTMLDivElement | null,
+) {
+  if (animationRef.current === null) return
+  window.cancelAnimationFrame(animationRef.current)
+  animationRef.current = null
+  carousel?.classList.remove("is-animating")
+}
+
+function gentlyCenterSlider(
+  carousel: HTMLDivElement | null,
+  card: HTMLAnchorElement | null,
+  animationRef: { current: number | null },
+) {
+  if (!carousel || !card) return
+
+  cancelSliderAnimation(animationRef, carousel)
+
+  const carouselBounds = carousel.getBoundingClientRect()
+  const cardBounds = card.getBoundingClientRect()
+  const distance = cardBounds.left + cardBounds.width / 2
+    - (carouselBounds.left + carouselBounds.width / 2)
+  const start = carousel.scrollLeft
+
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    carousel.scrollLeft = start + distance
+    animationRef.current = null
+    return
+  }
+
+  carousel.classList.add("is-animating")
+  const startedAt = performance.now()
+  const animate = (now: number) => {
+    const progress = Math.min((now - startedAt) / SLIDER_SCROLL_DURATION_MS, 1)
+    const easedProgress = easeSliderMovement(progress)
+    carousel.scrollLeft = start + distance * easedProgress
+
+    if (progress < 1) {
+      animationRef.current = window.requestAnimationFrame(animate)
+    } else {
+      animationRef.current = null
+      carousel.classList.remove("is-animating")
+    }
+  }
+
+  animationRef.current = window.requestAnimationFrame(animate)
+}
+
 export function MenuSection({ sliders }: { sliders: Slider[] }) {
   const [slideIndex, setSlideIndex] = useState(0)
   const [activeSlider, setActiveSlider] = useState(0)
   const [heroPaused, setHeroPaused] = useState(false)
   const carouselRef = useRef<HTMLDivElement | null>(null)
   const sliderRefs = useRef<Array<HTMLAnchorElement | null>>([])
+  const activeSliderRef = useRef(0)
+  const sliderAnimationRef = useRef<number | null>(null)
   const { direction, language, t } = useI18n()
   const sliderCards = [...sliders].sort((first, second) => first.display_order - second.display_order)
 
@@ -32,29 +89,40 @@ export function MenuSection({ sliders }: { sliders: Slider[] }) {
     return () => window.clearInterval(interval)
   }, [heroPaused, slideIndex])
 
+  useEffect(() => {
+    if (!sliderCards.length) return
+
+    activeSliderRef.current = 0
+    sliderRefs.current[0]?.scrollIntoView({
+      behavior: "auto",
+      block: "nearest",
+      inline: "start",
+    })
+  }, [sliderCards.length])
+
+  useEffect(() => {
+    if (sliderCards.length <= 1 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
+
+    const carousel = carouselRef.current
+    const interval = window.setInterval(() => {
+      const nextIndex = (activeSliderRef.current + 1) % sliderCards.length
+      activeSliderRef.current = nextIndex
+      setActiveSlider(nextIndex)
+      gentlyCenterSlider(carousel, sliderRefs.current[nextIndex], sliderAnimationRef)
+    }, 2500)
+
+    return () => {
+      window.clearInterval(interval)
+      cancelSliderAnimation(sliderAnimationRef, carousel)
+    }
+  }, [sliderCards.length])
+
   const moveSlider = (amount: number) => {
     if (!sliderCards.length) return
     const nextIndex = Math.min(Math.max(activeSlider + amount, 0), sliderCards.length - 1)
+    activeSliderRef.current = nextIndex
     setActiveSlider(nextIndex)
-    sliderRefs.current[nextIndex]?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" })
-  }
-
-  const syncActiveSlider = () => {
-    const carousel = carouselRef.current
-    if (!carousel) return
-    const carouselCenter = carousel.getBoundingClientRect().left + carousel.clientWidth / 2
-    let closestIndex = 0
-    let closestDistance = Number.POSITIVE_INFINITY
-    sliderRefs.current.forEach((card, index) => {
-      if (!card) return
-      const bounds = card.getBoundingClientRect()
-      const distance = Math.abs(bounds.left + bounds.width / 2 - carouselCenter)
-      if (distance < closestDistance) {
-        closestDistance = distance
-        closestIndex = index
-      }
-    })
-    setActiveSlider(closestIndex)
+    gentlyCenterSlider(carouselRef.current, sliderRefs.current[nextIndex], sliderAnimationRef)
   }
 
   return (
@@ -101,7 +169,7 @@ export function MenuSection({ sliders }: { sliders: Slider[] }) {
         >
           <span className="directional-arrow">→</span>
         </button>
-        <div className="home-category-carousel" ref={carouselRef} onScroll={syncActiveSlider}>
+        <div className="home-category-carousel" ref={carouselRef}>
           <div className="home-category-track">
             {sliderCards.map((slider, index) => {
               const title = localizedPair(slider.title_en, slider.title_ar, language)

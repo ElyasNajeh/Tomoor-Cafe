@@ -151,7 +151,33 @@ docker compose exec api alembic upgrade head
 
 On a fresh database, the API automatically installs the bundled catalog images
 and seeds categories, products, and sliders. If any product exists, startup leaves
-all catalog data unchanged.
+all catalog data unchanged. Seed images use the same validated WebP pipeline as
+admin uploads (quality 84, encoder method 6).
+
+To preview and then migrate existing product, category, and slider JPG/PNG uploads:
+
+```bash
+docker compose exec api python -m app.migrate_images_to_webp --dry-run
+docker compose exec api python -m app.migrate_images_to_webp
+```
+
+The migration verifies each newly stored WebP, commits all matching database
+references, verifies them again, and only then removes the old file. It skips
+existing `.webp` references and is safe to rerun.
+
+Slider uploads receive an additional slider-only composition pass before the
+existing WebP encoder. The uploaded image is scaled proportionally until it
+covers the full 1200 x 800 (3:2) target, then the excess is cropped equally from
+the sides or top and bottom. The result is one edge-to-edge image with no
+background layer, blur, padding, or contain-style inset.
+
+To preview and then compose existing slider images, including sliders that are
+already WebP but predate this pipeline:
+
+```bash
+docker compose exec api python -m app.migrate_slider_images --dry-run
+docker compose exec api python -m app.migrate_slider_images
+```
 
 For local development only, seed the fixed development admin with
 `a@gmail.com` / `1234`:

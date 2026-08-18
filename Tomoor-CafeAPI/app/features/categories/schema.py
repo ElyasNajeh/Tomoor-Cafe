@@ -1,5 +1,7 @@
 from pydantic import BaseModel, field_validator
 
+from app.shared.images import validate_webp_url
+
 
 class CategoryCreate(BaseModel):
     name_ar: str
@@ -14,3 +16,8 @@ class CategoryCreate(BaseModel):
         if not value:
             raise ValueError("This field is required")
         return value
+
+    @field_validator("image")
+    @classmethod
+    def processed_image(cls, value: str) -> str:
+        return validate_webp_url(value)

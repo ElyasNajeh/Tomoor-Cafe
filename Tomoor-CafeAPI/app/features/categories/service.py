@@ -6,7 +6,7 @@ from app.shared import crud
 from app.features.categories.model import Category
 from app.features.categories.schema import CategoryCreate
 from app.features.products.model import Product
-from app.shared.images import save_image
+from app.shared.images import cleanup_replaced_image, save_image
 
 
 def upload_image(file: UploadFile):
@@ -73,6 +73,7 @@ def update_category(db: Session, category_id: int, category_data: CategoryCreate
     if exist_category:
         raise HTTPException(status_code=400, detail="Category already exists")
 
+    previous_image = category.image
     for field, value in category_data.model_dump().items():
         setattr(category, field, value)
 
@@ -82,6 +83,7 @@ def update_category(db: Session, category_id: int, category_data: CategoryCreate
     try:
         db.commit()
         db.refresh(category)
+        cleanup_replaced_image(db, previous_image, category.image)
         return category
     except Exception:
         db.rollback()

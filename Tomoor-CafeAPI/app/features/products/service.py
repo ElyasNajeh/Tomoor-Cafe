@@ -5,7 +5,7 @@ from app.features.categories.model import Category
 from app.features.products.model import Drink, Food, Product, ProductType
 from app.features.products.schema import ProductCreate
 from app.shared import crud
-from app.shared.images import save_image
+from app.shared.images import cleanup_replaced_image, save_image
 
 
 def _apply_product_data(product: Product, product_data: ProductCreate) -> None:
@@ -88,11 +88,17 @@ def update_product(db: Session, product_id: int, product_data: ProductCreate):
     if not category:
         raise HTTPException(status_code=400, detail="Category not found")
 
+    previous_image = product.image
     _apply_product_data(product, product_data)
     if not category.is_active:
         product.is_active = False
-    db.commit()
-    db.refresh(product)
+    try:
+        db.commit()
+        db.refresh(product)
+    except Exception:
+        db.rollback()
+        raise
+    cleanup_replaced_image(db, previous_image, product.image)
     return product
 
 
