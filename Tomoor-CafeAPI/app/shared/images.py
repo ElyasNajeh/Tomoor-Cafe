@@ -14,15 +14,13 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 
+from pillow_heif import register_heif_opener
+
+register_heif_opener()
+
 WEBP_QUALITY = 84
 WEBP_METHOD = 6
 WEBP_CONTENT_TYPE = "image/webp"
-ALLOWED_IMAGE_TYPES = {
-    "image/jpeg": "JPEG",
-    "image/png": "PNG",
-    "image/webp": "WEBP",
-}
-ALLOWED_SOURCE_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp"}
 ImageTransform = Callable[[Image.Image], Image.Image]
 
 
@@ -63,45 +61,44 @@ def _target_directory(subdirectory: str) -> Path:
     return target
 
 
-def _prepare_for_webp(content: bytes, expected_format: str | None = None) -> Image.Image:
+def _prepare_for_webp(content: bytes) -> Image.Image:
     try:
         with warnings.catch_warnings():
             warnings.simplefilter("error", Image.DecompressionBombWarning)
+
             with Image.open(BytesIO(content)) as source:
                 source.load()
-                actual_format = (source.format or "").upper()
-                if actual_format not in set(ALLOWED_IMAGE_TYPES.values()):
-                    raise ImageProcessingError("Only JPEG, PNG, and WebP images are allowed")
-                if expected_format is not None and actual_format != expected_format:
-                    raise ImageProcessingError("The file content does not match its MIME type")
+
                 if getattr(source, "is_animated", False):
-                    raise ImageProcessingError("Animated images are not supported")
+                    source.seek(0)
 
                 oriented = ImageOps.exif_transpose(source)
+
                 has_alpha = oriented.mode in {"RGBA", "LA"} or (
                     oriented.mode == "P" and "transparency" in oriented.info
                 )
+
                 return oriented.convert("RGBA" if has_alpha else "RGB")
-    except ImageProcessingError:
-        raise
+
     except (Image.DecompressionBombError, Image.DecompressionBombWarning) as exc:
         raise ImageProcessingError("Image dimensions are too large") from exc
     except (UnidentifiedImageError, OSError, SyntaxError, ValueError) as exc:
-        raise ImageProcessingError("The uploaded file is not a valid image") from exc
+        raise ImageProcessingError(
+            "The uploaded file is not a supported image"
+        ) from exc
 
 
 def process_image_bytes(
     content: bytes,
     subdirectory: str,
     *,
-    expected_format: str | None = None,
     transform: ImageTransform | None = None,
 ) -> ProcessedImage:
     """Validate, orient, metadata-strip, and atomically store one WebP image."""
     if not content:
         raise ImageProcessingError("Image file is empty")
 
-    source_image = _prepare_for_webp(content, expected_format)
+    source_image = _prepare_for_webp(content)
     image = source_image
     if transform is not None:
         try:
@@ -169,25 +166,15 @@ def save_image(
     *,
     transform: ImageTransform | None = None,
 ) -> dict[str, str | int]:
-    content_type = (file.content_type or "").lower()
-    expected_format = ALLOWED_IMAGE_TYPES.get(content_type)
-    if expected_format is None:
-        raise HTTPException(status_code=400, detail="Only JPEG, PNG, and WebP images are allowed")
-
-    suffix = Path(file.filename or "").suffix.lower()
-    if suffix not in ALLOWED_SOURCE_SUFFIXES:
-        raise HTTPException(status_code=400, detail="Image filename must end in .jpg, .jpeg, .png, or .webp")
-
-    limit = settings.MAX_IMAGE_SIZE_MB * 1024 * 1024
+    limit = settings.MAX_IMAGE_SIZE_MB * 1024 * 1024 * 10
     content = file.file.read(limit + 1)
     if len(content) > limit:
-        raise HTTPException(status_code=413, detail=f"Image must be {settings.MAX_IMAGE_SIZE_MB} MB or smaller")
+        raise HTTPException(status_code=413, detail=f"Image must be {settings.MAX_IMAGE_SIZE_MB * 10} MB or smaller")
 
     try:
         return process_image_bytes(
             content,
             subdirectory,
-            expected_format=expected_format,
             transform=transform,
         ).as_response()
     except ImageProcessingError as exc:

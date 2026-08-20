@@ -133,7 +133,7 @@ export function ImageUpload({ value, onChange, upload, disabled }: { value: stri
         ref={inputRef}
         hidden
         type="file"
-        accept="image/jpeg,image/png,image/webp"
+        accept="image/*,.heic,.heif"
         onChange={(event) => void select(event)}
       />
       <button
